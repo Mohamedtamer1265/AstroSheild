@@ -8,16 +8,21 @@ import {
   RouterProvider,
 } from "react-router-dom";
 
-
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path="/" element={<MainLayout></MainLayout>}>
-      <Route index element={<Home></Home>} />
-      <Route path="/Game" element={<Game></Game>} />
-     {/* <Route path="*" element={<NotFoundPage />} />*/}
-    </Route>
+    <>
+      {/* Routes with MainLayout */}
+      <Route path="/" element={<MainLayout />}>
+        <Route index element={<Home />} />
+        {/* <Route path="*" element={<NotFoundPage />} /> */}
+      </Route>
+
+      {/* Standalone Game route */}
+      <Route path="/Game" element={<Game />} />
+    </>
   )
 );
+
 const App = () => {
   return <RouterProvider router={router} />;
 };

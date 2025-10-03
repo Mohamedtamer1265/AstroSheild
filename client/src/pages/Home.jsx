@@ -43,6 +43,24 @@ const Home = () => {
           </button>
         </div>
       </section>
+      {/* -------------------- CREATE SECTION (Customize Asteroid) -------------------- */}
+      <section
+        id="create-asteroid-section"
+        className="min-h-screen w-full bg-cover bg-center flex flex-col items-center justify-center text-white relative"
+        style={{ backgroundImage: `url(${gameBgImg})` }}
+      >
+        {/* Content */}
+        <div className="relative z-10 text-center space-y-8">
+          <h1 className="text-4xl font-bold">🌑 Create Your Own Asteroid</h1>
+
+          <button
+            onClick={() => (window.location.href = "/create-asteroid")}
+            className="bg-[#d84594] text-white px-10 py-4 rounded-full font-semibold text-xl shadow-lg transition duration-300 hover:opacity-90"
+          >
+            🚀 Create Asteroid
+          </button>
+        </div>
+      </section>
 
       {/* ================= Game Section ================= */}
       <section
