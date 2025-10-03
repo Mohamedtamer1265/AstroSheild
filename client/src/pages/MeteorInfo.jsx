@@ -6,7 +6,7 @@ const MeteorInfo = () => {
   return (
     <div>
       <AsteroidDashboard/>
-        <Map/>
+        
 
     </div>
   );

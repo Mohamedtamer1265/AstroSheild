@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import Map from "../components/map";
 
 const AsteroidDashboard = () => {
   const [asteroid, setAsteroid] = useState(null);
@@ -34,7 +35,7 @@ const AsteroidDashboard = () => {
   if (!asteroid) return <p className="text-white text-center mt-20">No Data Found</p>;
 
   return (
-    <div className="dashboard-page">
+    <div className="dashboard-page flex justify-center items-start flex-col">
       <style>{`
         .dashboard-page {
           min-height: 100vh;
@@ -141,6 +142,7 @@ const AsteroidDashboard = () => {
           <img src={asteroid.image} alt="asteroid" className="asteroid-image" />
         </div>
       </div>
+      <Map/>
     </div>
   );
 };
