@@ -1,0 +1,328 @@
+[
+  {
+    "id": 1,
+    "scenario_title": "The Threat of Asteroid X-1: Standard Impact",
+    "asteroid_info": {
+      "name": "Asteroid X-1",
+      "size": "250 meters (medium)",
+      "warning_time": "15 years (decades of advance notice)"
+    },
+    "question": "Asteroid X-1 is classified as small-to-medium (100–300 m). We have 15 years until impact. Since we have years of advance notice and the asteroid is within the defined size range, which demonstrated NASA method should be prioritized?",
+    "choices": [
+      { "choice_a": "Nuclear Explosives" },
+      { "choice_b": "Kinetic Impactor (like DART)" },
+      { "choice_c": "Gravity Tractor" },
+      { "choice_d": "Laser Ablation" }
+    ],
+    "correct_answer": "Kinetic Impactor (like DART)",
+    "justification": "The Kinetic Impactor method is designed for small-to-medium asteroids (100–300 m) with years/decades of advance notice. The DART mission successfully demonstrated this method."
+  },
+  {
+    "id": 2,
+    "scenario_title": "The Threat of Asteroid X-2: Precision is Key",
+    "asteroid_info": {
+      "name": "Asteroid X-2",
+      "size": "5 kilometers (very large)",
+      "warning_time": "60 years (very long warning time)"
+    },
+    "question": "Asteroid X-2 is extremely large, but we have 60 years to act. The mission priority is highly precise, controllable deflection with zero risk of fragmentation. Which slow, contact-free method works on any asteroid type and offers precision?",
+    "choices": [
+      { "choice_a": "Gravity Tractor" },
+      { "choice_b": "Kinetic Impactor" },
+      { "choice_c": "Ion-Beam Shepherd" },
+      { "choice_d": "Nuclear Explosives" }
+    ],
+    "correct_answer": "Gravity Tractor",
+    "justification": "The Gravity Tractor method is extremely slow, requiring decades, but its benefits include being very precise and controllable and working on any asteroid type. It is recommended for large asteroids with very long warning times."
+  },
+  {
+    "id": 3,
+    "scenario_title": "The Threat of Asteroid X-3: The Last Resort Scenario",
+    "asteroid_info": {
+      "name": "Asteroid X-3",
+      "size": "1.5 kilometers (very large)",
+      "warning_time": "9 months (short warning)"
+    },
+    "question": "Asteroid X-3 is very large, and we have less than a year of warning. All slower methods (Gravity Tractor, Ion-Beam Shepherd) are too slow to be effective. Given the short warning time and large size, what highly energetic, last-resort option is considered in simulations, despite its legal and political barriers?",
+    "choices": [
+      { "choice_a": "Laser Ablation" },
+      { "choice_b": "Kinetic Impactor" },
+      { "choice_c": "Nuclear Explosives" }
+    ],
+    "correct_answer": "Nuclear Explosives",
+    "justification": "Nuclear Explosives offer the highest energy density and can deflect very large asteroids quickly. This is designated as the last-resort option for very large asteroids with short warning times."
+  },
+  {
+    "id": 4,
+    "scenario_title": "The Threat of Asteroid X-4: Advanced Non-Contact Push",
+    "asteroid_info": {
+      "name": "Asteroid X-4",
+      "size": "450 meters (medium)",
+      "warning_time": "12 years (long lead time)"
+    },
+    "question": "Asteroid X-4 is a medium-sized asteroid, and we have a decade-plus of lead time. We require a non-contact method that delivers a stronger force than a Gravity Tractor but is still theoretical and requires very high power (100–300 kW+). Which method is this?",
+    "choices": [
+      { "choice_a": "Ion-Beam Shepherd" },
+      { "choice_b": "Kinetic Impactor" },
+      { "choice_c": "Nuclear Explosives" },
+      { "choice_d": "Gravity Tractor" }
+    ],
+    "correct_answer": "Ion-Beam Shepherd",
+    "justification": "The Ion-Beam Shepherd fires ion thrusters directly at the asteroid, offering a stronger force than the Gravity Tractor. It is suggested for medium asteroids with long lead times (decade+), though it requires very high power and is still theoretical."
+  },
+  {
+    "id": 5,
+    "scenario_title": "The Threat of Asteroid X-5: Focusing Solar Power",
+    "asteroid_info": {
+      "name": "Asteroid X-5",
+      "size": "3 kilometers (very large)",
+      "warning_time": "50 years (decades of warning)"
+    },
+    "question": "Asteroid X-5 is a very large target, and we have decades of warning. We wish to use future, contactless technology that creates thrust by vaporizing the surface material using high-power systems (lasers or focused sunlight). Which conceptual method requires huge power demands (megawatts)?",
+    "choices": [
+      { "choice_a": "Kinetic Impactor" },
+      { "choice_b": "Laser Ablation" },
+      { "choice_c": "Gravity Tractor" }
+    ],
+    "correct_answer": "Laser Ablation",
+    "justification": "Laser Ablation uses high-power lasers or mirrors to focus sunlight to vaporize the surface, creating jets that push the asteroid. This method requires huge power demands (megawatts) and is designed for very large asteroids with decades of warning, representing future technology."
+  },
+  {
+    "id": 6,
+    "scenario_title": "The Threat of Asteroid X-6: Composition Uncertainty",
+    "asteroid_info": {
+      "name": "Asteroid X-6",
+      "size": "200 meters (small-to-medium)",
+      "warning_time": "10 years (years of notice)"
+    },
+    "question": "Asteroid X-6 fits the optimal parameters (100–300 m, years of warning) for the Kinetic Impactor method. However, we have significant uncertainty about its composition. Which limitation prevents the Kinetic Impactor from being a guaranteed solution, potentially requiring a switch to a Gravity Tractor (if time allows)?",
+    "choices": [
+      { "choice_a": "Legal barriers prevent its deployment" },
+      { "choice_b": "The method is highly theoretical" },
+      { "choice_c": "Effectiveness depends heavily on asteroid composition" },
+      { "choice_d": "It requires massive power demands (megawatts)" }
+    ],
+    "correct_answer": "Effectiveness depends heavily on asteroid composition",
+    "justification": "A key limitation of the Kinetic Impactor method is that its effectiveness depends on the asteroid's composition. If the asteroid is too porous or fragmented, the impact may be less effective."
+  },
+  {
+    "id": 7,
+    "scenario_title": "The Threat of Asteroid X-7: Leveraging Ejecta",
+    "asteroid_info": {
+      "name": "Asteroid X-7",
+      "size": "150 meters (small)",
+      "warning_time": "7 years (sufficient notice)"
+    },
+    "question": "Asteroid X-7 is perfectly suited for the Kinetic Impactor method. In addition to the physical force of the spacecraft collision, what secondary mechanism actually amplifies the deflection effect achieved by a Kinetic Impactor?",
+    "choices": [
+      {
+        "choice_a": "The resultant heat vaporizes material, causing a jet thrust."
+      },
+      {
+        "choice_b": "The magnetic field generated pulls the asteroid off course."
+      },
+      { "choice_c": "The debris ejecta amplify the effect." }
+    ],
+    "correct_answer": "The debris ejecta amplify the effect.",
+    "justification": "The benefits of the Kinetic Impactor include demonstrated success, being relatively simple, and the fact that debris ejecta amplify the effect."
+  },
+  {
+    "id": 8,
+    "scenario_title": "The Threat of Asteroid X-8: Time Constraint Failure",
+    "asteroid_info": {
+      "name": "Asteroid X-8",
+      "size": "4 kilometers (very large)",
+      "warning_time": "5 years (short notice)"
+    },
+    "question": "Asteroid X-8 is very large and its composition is highly uncertain, making the precise Gravity Tractor method seem ideal. However, we only have 5 years until impact. Why is the Gravity Tractor method completely unsuitable for this scenario?",
+    "choices": [
+      {
+        "choice_a": "It requires massive spacecraft that cannot be built in time."
+      },
+      { "choice_b": "It is extremely slow and requires decades." },
+      {
+        "choice_c": "It is still theoretical and has not been tested in space."
+      }
+    ],
+    "correct_answer": "It is extremely slow and requires decades.",
+    "justification": "The Gravity Tractor is highly precise and works on any asteroid type, but its major limitation is that it is extremely slow and requires decades to be effective. It is intended for scenarios with very long warning times."
+  },
+  {
+    "id": 9,
+    "scenario_title": "The Threat of Asteroid X-9: Policy Barriers",
+    "asteroid_info": {
+      "name": "Asteroid X-9",
+      "size": "800 meters (large)",
+      "warning_time": "18 months (very short warning)"
+    },
+    "question": "Due to the short warning time for Asteroid X-9, the highly energetic Nuclear Explosives method must be considered as a last resort. What is the main political/legal limitation cited by NASA research regarding the use of nuclear devices in space for deflection?",
+    "choices": [
+      { "choice_a": "It requires huge power demands (megawatts)." },
+      {
+        "choice_b": "It is highly theoretical and requires 100–300 kW+ power."
+      },
+      { "choice_c": "Legal barriers, as they are banned by treaties." }
+    ],
+    "correct_answer": "Legal barriers, as they are banned by treaties.",
+    "justification": "Nuclear Explosives, while offering the highest energy density, are limited by legal barriers and political concerns, as real tests are banned by treaties."
+  },
+  {
+    "id": 10,
+    "scenario_title": "The Threat of Asteroid X-10: The High-Power Push",
+    "asteroid_info": {
+      "name": "Asteroid X-10",
+      "size": "350 meters (medium)",
+      "warning_time": "15 years (long lead time)"
+    },
+    "question": "For Asteroid X-10, we want a non-contact method that is stronger than a Gravity Tractor but requires a decade of lead time. This concept, the Ion-Beam Shepherd, has a major limitation regarding required infrastructure. What specific power demand (or range) is cited as necessary for this method?",
+    "choices": [
+      { "choice_a": "Requires very high power (100–300 kW+)." },
+      { "choice_b": "Requires minimal power (under 1 kW)." },
+      { "choice_c": "Requires huge power demands (megawatts)." }
+    ],
+    "correct_answer": "Requires very high power (100–300 kW+).",
+    "justification": "The Ion-Beam Shepherd is a theoretical method that has the limitation of requiring very high power (100–300 kW+)."
+  },
+  {
+    "id": 11,
+    "scenario_title": "The Threat of Asteroid X-11: Future Solar Technology",
+    "asteroid_info": {
+      "name": "Asteroid X-11",
+      "size": "2.5 kilometers (very large)",
+      "warning_time": "30 years (decades of notice)"
+    },
+    "question": "Asteroid X-11 is a scenario for future technology. If we pursue the Laser Ablation method, which uses focused energy to vaporize the surface, what alternative to high-power lasers is also studied in conceptual NASA research to achieve the required effect?",
+    "choices": [
+      { "choice_a": "Small nuclear reactors embedded on the surface." },
+      { "choice_b": "Mirrors to focus sunlight." },
+      { "choice_c": "Kinetic Impactor spacecraft with solar sails." }
+    ],
+    "correct_answer": "Mirrors to focus sunlight.",
+    "justification": "The Laser Ablation method involves using high-power lasers or mirrors to focus sunlight to vaporize the surface, creating jets that push the asteroid."
+  },
+  {
+    "id": 12,
+    "scenario_title": "The Threat of Asteroid X-12: The Composition Dilemma",
+    "asteroid_info": {
+      "name": "Asteroid X-12",
+      "size": "280 meters (medium)",
+      "warning_time": "10 years (long lead time)"
+    },
+    "question": "Asteroid X-12 falls within the size and warning time parameters for a Kinetic Impactor. However, if exploration reveals the asteroid is loosely aggregated (a 'rubble pile'), why might the Kinetic Impactor fail, necessitating a switch to the slower Gravity Tractor?",
+    "choices": [
+      {
+        "choice_a": "The Kinetic Impactor method is only designed for asteroids larger than 300 m."
+      },
+      {
+        "choice_b": "The effectiveness depends heavily on asteroid composition."
+      },
+      { "choice_c": "Only Laser Ablation can handle rubble pile asteroids." }
+    ],
+    "correct_answer": "The effectiveness depends heavily on asteroid composition.",
+    "justification": "A key limitation of the Kinetic Impactor is that its effectiveness depends heavily on asteroid composition. If the asteroid is too porous or weakly bound, the energy transfer may not achieve the necessary deflection."
+  },
+  {
+    "id": 13,
+    "scenario_title": "The Threat of Asteroid X-13: The DART Success Case",
+    "asteroid_info": {
+      "name": "Asteroid X-13",
+      "size": "250 meters (medium)",
+      "warning_time": "15 years (decades of advance notice)"
+    },
+    "question": "Asteroid X-13 is an ideal target for the Kinetic Impactor method. When the DART mission successfully demonstrated this technique on Dimorphos in 2022, what was the specific, measurable result of the impact?",
+    "choices": [
+      { "choice_a": "The asteroid broke into three fragments." },
+      { "choice_b": "Its orbit was shortened by 32 minutes." },
+      { "choice_c": "The asteroid’s mass was reduced by 10%." }
+    ],
+    "correct_answer": "Its orbit was shortened by 32 minutes.",
+    "justification": "The DART mission (2022) successfully struck Dimorphos, shortening its orbit by 32 minutes."
+  },
+  {
+    "id": 14,
+    "scenario_title": "The Threat of Asteroid X-14: Gravity Tractor Heritage",
+    "asteroid_info": {
+      "name": "Asteroid X-14",
+      "size": "5 kilometers (very large)",
+      "warning_time": "60 years (very long warning time)"
+    },
+    "question": "The Gravity Tractor method is best for Asteroid X-14 due to its size and long warning time. NASA research on this method was studied as part of which specific conceptual mission effort?",
+    "choices": [
+      {
+        "choice_a": "The Planetary Defense Coordination Office (PDCO) program."
+      },
+      { "choice_b": "The Asteroid Redirect Mission (ARM) concepts." },
+      { "choice_c": "The Hera mission plans." }
+    ],
+    "correct_answer": "The Asteroid Redirect Mission (ARM) concepts.",
+    "justification": "NASA research into the Gravity Tractor method was studied in Asteroid Redirect Mission (ARM) concepts."
+  },
+  {
+    "id": 15,
+    "scenario_title": "The Threat of Asteroid X-15: Ion-Beam Research Origin",
+    "asteroid_info": {
+      "name": "Asteroid X-15",
+      "size": "400 meters (medium)",
+      "warning_time": "12 years (long lead time)"
+    },
+    "question": "Asteroid X-15 is suitable for the theoretical Ion-Beam Shepherd method. Which specific NASA facility is referenced as conducting conceptual studies on both the Ion-Beam Shepherd and Gravity Tractor concepts?",
+    "choices": [
+      { "choice_a": "Lawrence Livermore National Lab (LLNL)" },
+      { "choice_b": "Jet Propulsion Laboratory (JPL)" },
+      { "choice_c": "Planetary Defense Coordination Office (PDCO)" }
+    ],
+    "correct_answer": "Jet Propulsion Laboratory (JPL)",
+    "justification": "JPL studies are referenced for the Ion-Beam Shepherd concept and NASA/JPL studies are noted for gravity tractors and the ion-beam shepherd."
+  },
+  {
+    "id": 16,
+    "scenario_title": "The Threat of Asteroid X-16: Precision Ablation",
+    "asteroid_info": {
+      "name": "Asteroid X-16",
+      "size": "2.5 kilometers (very large)",
+      "warning_time": "30 years (decades of notice)"
+    },
+    "question": "Using Laser Ablation for Asteroid X-16, the force generated is slow but continuous. What additional benefit makes this non-contact force highly desirable for precise trajectory corrections?",
+    "choices": [
+      { "choice_a": "It prevents the asteroid from spinning." },
+      { "choice_b": "It is adjustable." },
+      { "choice_c": "It uses solar sails as a secondary pusher." }
+    ],
+    "correct_answer": "It is adjustable.",
+    "justification": "A key benefit of Laser Ablation is that the resulting force is contactless, adjustable, and continuous."
+  },
+  {
+    "id": 17,
+    "scenario_title": "The Threat of Asteroid X-17: Simulation Oversight",
+    "asteroid_info": {
+      "name": "Asteroid X-17",
+      "size": "1.2 kilometers (very large)",
+      "warning_time": "8 months (short warning)"
+    },
+    "question": "If we must resort to Nuclear Explosives for Asteroid X-17, which specific national laboratory is cited as performing computer simulation research on this last-resort deflection method?",
+    "choices": [
+      { "choice_a": "Lawrence Livermore National Lab" },
+      { "choice_b": "Jet Propulsion Laboratory (JPL)" },
+      { "choice_c": "European Space Agency (ESA)" }
+    ],
+    "correct_answer": "Lawrence Livermore National Lab",
+    "justification": "Nuclear deflection research is specifically associated with Lawrence Livermore National Lab."
+  },
+  {
+    "id": 18,
+    "scenario_title": "The Threat of Asteroid X-18: The Coordinating Office",
+    "asteroid_info": {
+      "name": "Asteroid X-18",
+      "size": "Any size",
+      "warning_time": "Immediate threat"
+    },
+    "question": "Regardless of the size or warning time of Asteroid X-18, which specific NASA office is explicitly tasked with developing and testing methods to prevent potential asteroid impacts?",
+    "choices": [
+      { "choice_a": "The Asteroid Redirect Mission (ARM)" },
+      { "choice_b": "The Double Asteroid Redirection Test (DART)" },
+      { "choice_c": "The Planetary Defense Coordination Office (PDCO)" }
+    ],
+    "correct_answer": "The Planetary Defense Coordination Office (PDCO)",
+    "justification": "NASA’s Planetary Defense Coordination Office (PDCO) develops and tests several methods to prevent potential asteroid impacts."
+  }
+]

@@ -3,10 +3,10 @@ import React from "react";
 import bgImg from "../assets/img/intro.jpg";
 import gameBgImg from "../assets/img/gameintro.jpg";
 import wiiryvid from "../assets/vid/wiry.mp4";
-
+import { useNavigate } from "react-router-dom";
 const Home = () => {
   const ASTRO_PINK = "#d84594";
-
+  const navigate = useNavigate();
   return (
     <div>
       {/* ================= Home Section ================= */}
@@ -24,6 +24,7 @@ const Home = () => {
           <button
             className="text-white px-8 py-4 rounded-lg font-bold text-xl mt-10 shadow-xl transition duration-300 hover:opacity-90"
             style={{ backgroundColor: ASTRO_PINK }}
+            onClick={() => navigate("/MeteorPage")} // Navigate to MeteorPage
           >
             Explore Asteroids
           </button>
@@ -38,6 +39,12 @@ const Home = () => {
             onMouseLeave={(e) =>
               (e.currentTarget.style.backgroundColor = "transparent")
             }
+            onClick={() => {
+              const gameSection = document.getElementById("game-section"); // target section, not button
+              if (gameSection) {
+                gameSection.scrollIntoView({ behavior: "smooth" });
+              }
+            }}
           >
             Play Now
           </button>
@@ -91,7 +98,10 @@ const Home = () => {
             Wiiry Boy
           </h2>
 
-          <button className="bg-[#d84594] text-white px-8 py-3 rounded-full font-semibold text-lg shadow-lg transition duration-300 hover:opacity-90">
+          <button
+            className="bg-[#d84594] text-white px-8 py-3 rounded-full font-semibold text-lg shadow-lg transition duration-300 hover:opacity-90"
+            onClick={() => navigate("/Game")} // Navigate to /Game
+          >
             Play Now
           </button>
         </div>

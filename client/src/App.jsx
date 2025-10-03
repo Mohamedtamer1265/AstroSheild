@@ -1,6 +1,7 @@
 import Home from "./pages/Home";
 import Game from "./pages/Game";
 import MainLayout from "./layout/MainLayout";
+import { useNavigate } from "react-router-dom";
 import {
   Route,
   createBrowserRouter,
@@ -10,7 +11,6 @@ import {
 import MeteorPage from "./pages/MeteorPage";
 import MeteorInfo from "./pages/MeteorInfo";
 import AsteroidDashboard from "./pages/asteroid";
-
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
@@ -22,7 +22,10 @@ const router = createBrowserRouter(
       <Route path="/MeteorPage" element={<MeteorPage></MeteorPage>} />
       <Route path="/MeteorInfo" element={<MeteorInfo></MeteorInfo>} />
       <Route path="/Game" element={<Game></Game>} />
-      <Route path="/astroid" element={<AsteroidDashboard></AsteroidDashboard>} />
+      <Route
+        path="/astroid"
+        element={<AsteroidDashboard></AsteroidDashboard>}
+      />
     </>
   )
 );
