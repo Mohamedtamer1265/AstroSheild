@@ -7,19 +7,23 @@ import {
   createRoutesFromElements,
   RouterProvider,
 } from "react-router-dom";
+import MeteorPage from "./pages/MeteorPage";
+import MeteorInfo from "./pages/MeteorInfo";
+
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
-      {/* Routes with MainLayout */}
-      <Route path="/" element={<MainLayout />}>
-        <Route index element={<Home />} />
-        {/* <Route path="*" element={<NotFoundPage />} /> */}
-      </Route>
+      <Route path="/" element={<MainLayout></MainLayout>}>
+        <Route index element={<Home></Home>} />
+        <Route path="/Game" element={<Game></Game>} />
 
-      {/* Standalone Game route */}
-      <Route path="/Game" element={<Game />} />
+        {/* <Route path="*" element={<NotFoundPage />} />*/}
+      </Route>
+      <Route path="/MeteorPage" element={<MeteorPage></MeteorPage>} />
+      <Route path="/MeteorInfo" element={<MeteorInfo></MeteorInfo>} />
     </>
+    
   )
 );
 
