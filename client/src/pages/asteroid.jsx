@@ -35,111 +35,142 @@ const AsteroidDashboard = () => {
   if (!asteroid) return <p className="text-white text-center mt-20">No Data Found</p>;
 
   return (
-    <div className="dashboard-page flex justify-center items-start flex-col">
-      <style>{`
-        .dashboard-page {
-          min-height: 100vh;
-          width: 100%;
-          background: url('../src/assets/img/gameintro.jpg') no-repeat center center fixed;
-          background-size: cover;
-          color: white;
-          font-family: 'Open Sans', sans-serif;
-          display: flex;
-          justify-content: center;
-          padding: 40px 20px;
-        }
+    <div className="min-h-screen w-full relative overflow-hidden p-8" style={{
+      background: `
+        radial-gradient(2px 2px at 20px 30px, #fff, transparent),
+        radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.8), transparent),
+        radial-gradient(1px 1px at 90px 40px, #fff, transparent),
+        radial-gradient(1px 1px at 130px 80px, rgba(255,255,255,0.6), transparent),
+        radial-gradient(2px 2px at 160px 30px, #fff, transparent),
+        radial-gradient(1px 1px at 200px 90px, rgba(255,255,255,0.7), transparent),
+        radial-gradient(2px 2px at 240px 50px, #fff, transparent),
+        radial-gradient(1px 1px at 280px 10px, rgba(255,255,255,0.9), transparent),
+        radial-gradient(1px 1px at 320px 70px, #fff, transparent),
+        radial-gradient(2px 2px at 360px 20px, rgba(255,255,255,0.8), transparent),
+        linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%)
+      `,
+      backgroundSize: '400px 200px, 400px 200px, 400px 200px, 400px 200px, 400px 200px, 400px 200px, 400px 200px, 400px 200px, 400px 200px, 400px 200px, 100% 100%'
+    }}>
 
-        .dashboard-container {
-          max-width: 900px;
-          width: 100%;
-        }
-
-        .dashboard-card {
-          background: rgba(0,0,0,0.7);
-          border: 1px solid #15EEFF;
-          border-radius: 15px;
-          padding: 25px;
-          margin-bottom: 20px;
-          box-shadow: 0 0 20px rgba(21, 238, 255, 0.4);
-        }
-
-        .dashboard-card h3 {
-          font-size: 22px;
-          margin-bottom: 10px;
-          color: #F7F7F7;
-        }
-
-        .dashboard-card p {
-          font-size: 18px;
-          margin: 4px 0;
-        }
-
-        .asteroid-image {
-          width: 150px;
-          border-radius: 12px;
-          margin-left: auto;
-        }
-
-        .top-section {
-          display: flex;
-          justify-content: space-between;
-          align-items: flex-start;
-          margin-bottom: 30px;
-        }
-
-        .get-started-btn {
-          background: #d84594;
-          color: white;
-          padding: 10px 20px;
-          border-radius: 12px;
-          font-weight: bold;
-          cursor: pointer;
-          text-decoration: none;
-        }
-      `}</style>
-
-      <div className="dashboard-container">
-        <div className="top-section">
-          <h1>ID: {asteroid.id}</h1>
-          <a href="#" className="get-started-btn">+ Get Started</a>
+      <div className="max-w-7xl mx-auto">
+        {/* Header Section */}
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-4xl font-light text-white tracking-wide">
+            Asteroid ID: {asteroid.id}
+          </h1>
+          <button className="bg-white/15 backdrop-blur-md border border-white/20 rounded-2xl px-6 py-3 text-white font-light hover:bg-white/20 transition-all duration-300">
+            + Get Started
+          </button>
         </div>
 
-        {/* Basic Info */}
-        <div className="dashboard-card">
-          <h3>Basic Information</h3>
-          <p><strong>Name:</strong> {asteroid.name}</p>
-          <p><strong>Discovery Date:</strong> {asteroid.discoveryDate}</p>
-          <p><strong>Discoverer / Observatory:</strong> {asteroid.discoverer}</p>
-        </div>
-
-        {/* Orbit & Position */}
-        <div className="dashboard-card">
-          <h3>Orbit & Position</h3>
-          <p><strong>Current Position:</strong> {asteroid.currentPosition}</p>
-          <p><strong>Distance From Earth:</strong> {asteroid.distanceFromEarth}</p>
-          <p><strong>Orbital Speed:</strong> {asteroid.orbitalSpeed}</p>
-          <p><strong>Orbital Period:</strong> {asteroid.orbitalPeriod}</p>
-          <p><strong>Orbit Shape (Eccentricity):</strong> {asteroid.orbitEccentricity}</p>
-        </div>
-
-        {/* Physical Characteristics */}
-        <div className="dashboard-card">
-          <h3>Physical Characteristics</h3>
-          <p><strong>Estimated Diameter:</strong> {asteroid.diameter}</p>
-          <p><strong>Mass:</strong> {asteroid.mass}</p>
-          <p><strong>Composition:</strong> {asteroid.composition}</p>
-          <p><strong>Apparent Magnitude:</strong> {asteroid.apparentMagnitude}</p>
-        </div>
-
-        {/* Image + Stats */}
-        <div className="dashboard-card" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <div>
-            <h3>Additional Info</h3>
-            <p><strong>Previous Close Approaches:</strong> {asteroid.previousClose}</p>
-            <p><strong>Interesting Facts:</strong> {asteroid.facts}</p>
-            <p><strong>Name Meaning:</strong> {asteroid.nameMeaning}</p>
+        {/* Info Cards Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+          {/* Basic Info */}
+          <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 shadow-xl hover:bg-white/15 transition-all duration-300">
+            <div className="flex items-center mb-4">
+              <div className="w-2 h-8 bg-gradient-to-b from-blue-400 to-blue-600 rounded-full mr-4"></div>
+              <h3 className="text-xl font-light text-white">Basic Information</h3>
+            </div>
+            <div className="space-y-3 text-white/80">
+              <div className="flex justify-between items-center p-2 rounded-lg bg-white/5">
+                <span className="font-light">Name</span>
+                <span className="font-mono text-white">{asteroid.name}</span>
+              </div>
+              <div className="flex justify-between items-center p-2 rounded-lg bg-white/5">
+                <span className="font-light">Discovery Date</span>
+                <span className="font-mono text-white">{asteroid.discoveryDate}</span>
+              </div>
+              <div className="flex justify-between items-center p-2 rounded-lg bg-white/5">
+                <span className="font-light">Discoverer</span>
+                <span className="font-mono text-white text-sm">{asteroid.discoverer}</span>
+              </div>
+            </div>
           </div>
-          <img src={asteroid.image} alt="asteroid" className="asteroid-image" />
+
+          {/* Orbit & Position */}
+          <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 shadow-xl hover:bg-white/15 transition-all duration-300">
+            <div className="flex items-center mb-4">
+              <div className="w-2 h-8 bg-gradient-to-b from-green-400 to-green-600 rounded-full mr-4"></div>
+              <h3 className="text-xl font-light text-white">Orbit & Position</h3>
+            </div>
+            <div className="space-y-3 text-white/80">
+              <div className="flex justify-between items-center p-2 rounded-lg bg-white/5">
+                <span className="font-light">Current Position</span>
+                <span className="font-mono text-white text-sm">{asteroid.currentPosition}</span>
+              </div>
+              <div className="flex justify-between items-center p-2 rounded-lg bg-white/5">
+                <span className="font-light">Distance From Earth</span>
+                <span className="font-mono text-white">{asteroid.distanceFromEarth}</span>
+              </div>
+              <div className="flex justify-between items-center p-2 rounded-lg bg-white/5">
+                <span className="font-light">Orbital Speed</span>
+                <span className="font-mono text-white">{asteroid.orbitalSpeed}</span>
+              </div>
+              <div className="flex justify-between items-center p-2 rounded-lg bg-white/5">
+                <span className="font-light">Orbital Period</span>
+                <span className="font-mono text-white">{asteroid.orbitalPeriod}</span>
+              </div>
+              <div className="flex justify-between items-center p-2 rounded-lg bg-white/5">
+                <span className="font-light">Eccentricity</span>
+                <span className="font-mono text-white">{asteroid.orbitEccentricity}</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Physical Characteristics */}
+          <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 shadow-xl hover:bg-white/15 transition-all duration-300">
+            <div className="flex items-center mb-4">
+              <div className="w-2 h-8 bg-gradient-to-b from-orange-400 to-red-600 rounded-full mr-4"></div>
+              <h3 className="text-xl font-light text-white">Physical Characteristics</h3>
+            </div>
+            <div className="space-y-3 text-white/80">
+              <div className="flex justify-between items-center p-2 rounded-lg bg-white/5">
+                <span className="font-light">Diameter</span>
+                <span className="font-mono text-white">{asteroid.diameter}</span>
+              </div>
+              <div className="flex justify-between items-center p-2 rounded-lg bg-white/5">
+                <span className="font-light">Mass</span>
+                <span className="font-mono text-white">{asteroid.mass}</span>
+              </div>
+              <div className="flex justify-between items-center p-2 rounded-lg bg-white/5">
+                <span className="font-light">Composition</span>
+                <span className="font-mono text-white">{asteroid.composition}</span>
+              </div>
+              <div className="flex justify-between items-center p-2 rounded-lg bg-white/5">
+                <span className="font-light">Apparent Magnitude</span>
+                <span className="font-mono text-white">{asteroid.apparentMagnitude}</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Additional Info with Image */}
+          <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 shadow-xl hover:bg-white/15 transition-all duration-300">
+            <div className="flex items-center mb-4">
+              <div className="w-2 h-8 bg-gradient-to-b from-purple-400 to-purple-600 rounded-full mr-4"></div>
+              <h3 className="text-xl font-light text-white">Additional Information</h3>
+            </div>
+            <div className="flex justify-between items-start">
+              <div className="space-y-3 text-white/80 flex-1 mr-4">
+                <div className="p-2 rounded-lg bg-white/5">
+                  <span className="font-light block">Previous Close Approaches</span>
+                  <span className="font-mono text-white text-sm">{asteroid.previousClose}</span>
+                </div>
+                <div className="p-2 rounded-lg bg-white/5">
+                  <span className="font-light block">Interesting Facts</span>
+                  <span className="font-mono text-white text-sm">{asteroid.facts}</span>
+                </div>
+                <div className="p-2 rounded-lg bg-white/5">
+                  <span className="font-light block">Name Meaning</span>
+                  <span className="font-mono text-white text-sm">{asteroid.nameMeaning}</span>
+                </div>
+              </div>
+              <img 
+                src={asteroid.image} 
+                alt="asteroid" 
+                className="w-32 h-32 object-cover rounded-xl border border-white/20"
+              />
+            </div>
+          </div>
         </div>
       </div>
       <Map/>
