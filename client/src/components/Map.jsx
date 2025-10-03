@@ -3,6 +3,9 @@ import { MapContainer, TileLayer, useMapEvents, Marker, Popup, Circle, useMap } 
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
+// API Configuration
+const API_BASE_URL = 'http://localhost:5000';
+
 // Fix default markers in react-leaflet
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -57,8 +60,8 @@ const simulateAsteroidImpact = async (lat, lng, setImpactData) => {
     
     // Default asteroid parameters - can be customized
     const impactParams = {
-      diameter_m: 1000.0,           // 1km asteroid
-      velocity_km_s: 20.0,          // 20 km/s impact velocity
+      diameter_m: 10.0,           // 10m asteroid
+      velocity_km_s: 2.0,          // 2 km/s impact velocity
       density_kg_m3: 2600,          // Stone asteroid
       angle_degrees: 45,            // 45-degree impact angle
       impact_lat: lat,
@@ -67,9 +70,10 @@ const simulateAsteroidImpact = async (lat, lng, setImpactData) => {
     };
 
     console.log('Simulating asteroid impact with params:', impactParams);
+    console.log('Using API Base URL:', API_BASE_URL);
 
     // Call the Impact Controller API
-    const response = await fetch('/api/impact/analyze', {
+    const response = await fetch(`${API_BASE_URL}/api/impact/analyze`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -85,7 +89,10 @@ const simulateAsteroidImpact = async (lat, lng, setImpactData) => {
     
     if (result.success) {
       console.log('Impact analysis result:', result.data);
-      setImpactData(result.data);
+      
+      // Transform API response to match expected format
+      const transformedData = transformApiResponse(result.data);
+      setImpactData(transformedData);
     } else {
       console.error('Impact analysis failed:', result.error);
       // Fallback with mock data for demonstration
@@ -93,16 +100,52 @@ const simulateAsteroidImpact = async (lat, lng, setImpactData) => {
     }
   } catch (error) {
     console.error('Error simulating asteroid impact:', error);
+    console.log('Falling back to mock data for demonstration');
+    
     // Fallback with mock data for demonstration
-    setImpactData(createMockImpactData(lat, lng, {
-      diameter_m: 1000.0,
-      velocity_km_s: 20.0,
-      density_kg_m3: 2600,
-      angle_degrees: 45,
-      impact_lat: lat,
-      impact_lon: lng
-    }));
+  //   setImpactData(createMockImpactData(lat, lng, {
+  //     diameter_m: 1000.0,
+  //     velocity_km_s: 20.0,
+  //     density_kg_m3: 2600,
+  //     angle_degrees: 45,
+  //     impact_lat: lat,
+  //     impact_lon: lng
+  //   }));
   }
+};
+
+// Transform API response to match the expected format for the UI
+const transformApiResponse = (apiData) => {
+  // The API might return data in a different structure
+  // This function ensures compatibility with the existing UI code
+  return {
+    impact_parameters: {
+      diameter_m: apiData.asteroid_properties?.diameter_m || apiData.impact_parameters?.diameter_m || 1000,
+      velocity_km_s: apiData.asteroid_properties?.velocity_km_s || apiData.impact_parameters?.velocity_km_s || 20,
+      density_kg_m3: apiData.asteroid_properties?.density_kg_m3 || apiData.impact_parameters?.density_kg_m3 || 2600,
+      angle_degrees: apiData.asteroid_properties?.angle_degrees || apiData.impact_parameters?.angle_degrees || 45,
+    },
+    location: {
+      latitude: apiData.impact_location?.latitude || apiData.location?.latitude,
+      longitude: apiData.impact_location?.longitude || apiData.location?.longitude,
+      elevation_m: apiData.impact_location?.elevation_m || apiData.location?.elevation_m || 0,
+      location_name: apiData.impact_location?.name || apiData.location?.location_name
+    },
+    impact_effects: {
+      crater_diameter_m: (apiData.analysis?.crater?.diameter_km || apiData.impact_effects?.crater_diameter_m / 1000 || 15) * 1000,
+      crater_depth_m: apiData.analysis?.crater?.depth_m || apiData.impact_effects?.crater_depth_m || 2500,
+      seismic_magnitude: apiData.analysis?.seismic?.moment_magnitude || apiData.impact_effects?.seismic_magnitude || 7.2,
+      seismic_radius_km: apiData.analysis?.seismic?.damage_radius_km || apiData.impact_effects?.seismic_radius_km || 500,
+      air_blast_radius_km: Math.max(...Object.values(apiData.analysis?.air_blast_ranges || {})) || apiData.impact_effects?.air_blast_radius_km || 200,
+      thermal_radius_km: apiData.analysis?.thermal_radius_km || apiData.impact_effects?.thermal_radius_km || 150
+    },
+    casualties: {
+      estimated_deaths: apiData.summary?.total_fatalities || apiData.casualties?.estimated_deaths || 50000,
+      estimated_injuries: apiData.summary?.total_injuries || apiData.casualties?.estimated_injuries || 200000,
+      population_affected: apiData.casualties?.population_affected || 8000000,
+      confidence_level: apiData.casualties?.confidence_level || "medium"
+    }
+  };
 };
 
 // Create mock impact data for fallback/demo purposes
@@ -136,12 +179,35 @@ const createMockImpactData = (lat, lng, params) => {
 const Map = () => {
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [impactData, setImpactData] = useState(null);
+  const [apiStatus, setApiStatus] = useState('checking'); // 'checking', 'connected', 'disconnected'
   const [asteroidParams, setAsteroidParams] = useState({
     diameter_m: 1000,
     velocity_km_s: 20,
     density_kg_m3: 2600,
     angle_degrees: 45
   });
+
+  // Check API connection on component mount
+  useEffect(() => {
+    const checkApiConnection = async () => {
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/health`);
+        if (response.ok) {
+          setApiStatus('connected');
+          console.log('✅ API connection established at:', API_BASE_URL);
+        } else {
+          setApiStatus('disconnected');
+          console.warn('⚠️ API responded but with error status');
+        }
+      } catch (error) {
+        setApiStatus('disconnected');
+        console.error('❌ API connection failed:', error);
+        console.log('📝 Make sure Flask server is running at:', API_BASE_URL);
+      }
+    };
+
+    checkApiConnection();
+  }, []);
 
   const handleLocationSelect = (lat, lng) => {
     setSelectedLocation({ lat, lng });
@@ -162,6 +228,25 @@ const Map = () => {
         <p className="mb-2 text-center text-white/80 font-light">
           Click anywhere on the map to simulate an asteroid impact at that location.
         </p>
+        
+        {/* API Status Indicator */}
+        <div className="flex items-center justify-center mt-4">
+          <div className="flex items-center space-x-2">
+            <div className={`w-2 h-2 rounded-full ${
+              apiStatus === 'connected' ? 'bg-green-400' : 
+              apiStatus === 'disconnected' ? 'bg-red-400' : 
+              'bg-yellow-400'
+            }`}></div>
+            <span className="text-sm text-white/70">
+              API Status: {
+                apiStatus === 'connected' ? 'Connected' : 
+                apiStatus === 'disconnected' ? 'Disconnected (using mock data)' : 
+                'Checking...'
+              }
+            </span>
+            <span className="text-xs text-white/50">({API_BASE_URL})</span>
+          </div>
+        </div>
       </div>
       <div className="flex gap-4">
         {/* Map Container - Made smaller */}
