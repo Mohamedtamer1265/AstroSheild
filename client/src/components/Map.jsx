@@ -60,7 +60,7 @@ const simulateAsteroidImpact = async (lat, lng, setImpactData) => {
     
     // Default asteroid parameters - can be customized
     const impactParams = {
-      diameter_m: 10.0,           // 10m asteroid
+      diameter_m: 1000.0,           // 1km asteroid
       velocity_km_s: 2.0,          // 2 km/s impact velocity
       density_kg_m3: 2600,          // Stone asteroid
       angle_degrees: 45,            // 45-degree impact angle

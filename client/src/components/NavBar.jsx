@@ -12,9 +12,9 @@ const Navbar = () => {
   return (
     <nav className="flex justify-center fixed top-10 w-full z-50">
       <ul
-        className="flex space-x-12 bg-gradient-to-r from-[#0f172a] to-[#1e293b] 
-                     px-10 py-3 rounded-full shadow-lg border border-white/20 
-                     backdrop-blur-md"
+        className="flex space-x-12 bg-white/10 backdrop-blur-lg
+                     px-10 py-3 rounded-full shadow-2xl border border-white/20 
+                     hover:bg-white/15 transition-all duration-300"
       >
         {links.map((link) => (
           <li key={link.href}>
