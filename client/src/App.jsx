@@ -9,21 +9,21 @@ import {
 } from "react-router-dom";
 import MeteorPage from "./pages/MeteorPage";
 import MeteorInfo from "./pages/MeteorInfo";
-
+import AsteroidDashboard from "./pages/asteroid";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
       <Route path="/" element={<MainLayout></MainLayout>}>
         <Route index element={<Home></Home>} />
-        <Route path="/Game" element={<Game></Game>} />
 
         {/* <Route path="*" element={<NotFoundPage />} />*/}
       </Route>
       <Route path="/MeteorPage" element={<MeteorPage></MeteorPage>} />
       <Route path="/MeteorInfo" element={<MeteorInfo></MeteorInfo>} />
+      <Route path="/Game" element={<Game></Game>} />
+      <Route path="/astroid" element={<AsteroidDashboard></AsteroidDashboard>} />
     </>
-    
   )
 );
 
