@@ -7,11 +7,13 @@ import {
   createRoutesFromElements,
   RouterProvider,
 } from "react-router-dom";
+
+
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<MainLayout></MainLayout>}>
       <Route index element={<Home></Home>} />
-      <Route path="/jobs" element={<Game></Game>} />
+      <Route path="/Game" element={<Game></Game>} />
      {/* <Route path="*" element={<NotFoundPage />} />*/}
     </Route>
   )

@@ -11,7 +11,9 @@ body {
   margin: 0;
   padding: 0;
 }
-
+html {
+  scroll-behavior: smooth;
+}
 
 /* --- 2. Custom Tailwind Component/Utility --- */
 .text-astro-glow {
