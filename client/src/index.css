@@ -12,25 +12,10 @@ body {
   padding: 0;
 }
 
-/* src/index.css or globals.css */
-@font-face {
-  font-family: 'Pixelify Sans';
-  src: url('/fonts/PixelifySans.woff2') format('woff2'),
-       url('/fonts/PixelifySans.woff') format('woff');
-  font-weight: 400;
-  font-style: normal;
-}
 
-/* page/Home.module.css */
-
-.titleGlow {
-  /* Set the color to white, matching your theme */
-  color: #FFF; 
-  
-  /* Apply the custom pixel font. You must ensure this font is loaded globally. */
-  font-family: "Pixelify Sans", sans-serif; 
-  
-  /* The glowing text-shadow effect */
+/* --- 2. Custom Tailwind Component/Utility --- */
+.text-astro-glow {
+  /* The complex shadow that Tailwind can't handle with standard classes */
   text-shadow: 0 0 9.839px rgba(166, 181, 206, 0.35), 
                0 0 9.839px rgba(166, 181, 206, 0.35), 
                0 0 9.839px rgba(166, 181, 206, 0.35), 
@@ -39,13 +24,8 @@ body {
                0 0 9.839px rgba(166, 181, 206, 0.35), 
                0 0 9.839px rgba(166, 181, 206, 0.35), 
                0 0 9.839px rgba(166, 181, 206, 0.35);
-               
-  /* You can still set basic properties here, or override them with Tailwind */
-  font-weight: 400;
-  line-height: normal;
-  
-  /* Use a large font size like in the image. We'll use this custom size 
-     instead of a Tailwind class like text-5xl. */
+
+  /* Set the custom font and large size here for consistency */
+  font-family: "Pixelify Sans", sans-serif;
   font-size: 146.785px; 
 }
-

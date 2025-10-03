@@ -1,12 +1,15 @@
+// vite.config.js (Corrected)
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 
-// https://vite.dev/config/
+// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
-     tailwindcss(),
+    // You've correctly used the Vite plugin for Tailwind here
+    tailwindcss(), 
     react({
+      // Keep your react plugins
       babel: {
         plugins: ['babel-plugin-react-compiler'],
       },
@@ -15,9 +18,5 @@ export default defineConfig({
   server: {
     port: 3000,
   },
-  extend: {
-  fontFamily: {
-    pixel: ['"Pixelify Sans"', 'sans-serif'],
-  },
-}
+  // The 'extend' block has been removed from here!
 })
