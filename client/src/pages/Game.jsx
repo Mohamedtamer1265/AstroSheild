@@ -1,78 +1,185 @@
-// src/pages/Game.jsx
-import React from 'react';
-import gameBgImg from '../assets/img/intro.jpg'; // Adjust path if needed
-import wiiryImage from '../assets/img/intro.jpg'; // Assume you have Wiiry's image
+import React, { useState } from "react";
+import bgImg from "../assets/img/gameintro.jpg";
+import charImg from "../assets/img/gameintro.jpg";
+import asteroidImg from "../assets/img/asteroid.png";
+
+const questions = [
+  {
+    text: "I am an asteroid heading to a big population density! What should I do?",
+    options: ["Divert path", "Explode myself", "Do nothing"],
+    correct: 0,
+  },
+  {
+    text: "I am an asteroid with high velocity. What's the best action?",
+    options: ["Slow down", "Change orbit", "Crash directly"],
+    correct: 1,
+  },
+  {
+    text: "I might hit the ocean. What is the main risk?",
+    options: ["Tsunami", "Nothing happens", "Forest fire"],
+    correct: 0,
+  },
+];
 
 const Game = () => {
-    // Define the pink color for consistency
-    const ASTRO_PINK = '#d84594';
+  const [currentQ, setCurrentQ] = useState(0);
+  const [score, setScore] = useState(0);
+  const [feedback, setFeedback] = useState("");
 
-    return (
-        <div 
-            className="min-h-screen w-full bg-cover bg-center text-white p-8 flex flex-col items-center justify-start relative"
-            style={{ backgroundImage: `url(${gameBgImg})` }}
-        >
-            {/* Optional: Planet in top-left, shooting stars in top-right */}
-            {/* These are typically part of the background image or absolute positioned SVGs/icons */}
-            <div className="absolute top-8 left-8">
-                {/* <img src="/path/to/planet.svg" alt="planet" className="w-24" /> */}
-            </div>
-            <div className="absolute top-8 right-8 flex flex-col space-y-2">
-                {/* <img src="/path/to/star.svg" alt="star" className="w-8" /> */}
-            </div>
+  const handleAnswer = (i) => {
+    if (i === questions[currentQ].correct) {
+      setScore(score + 1);
+      setFeedback("✅ Correct!");
+    } else {
+      setFeedback("❌ Wrong!");
+    }
 
-            {/* Main content container */}
-            <div className="max-w-4xl w-full flex flex-col items-center space-y-12">
-                {/* Top Section: "Who is Wiiry ?" */}
-                <h1 className="text-4xl font-bold mt-12 mb-8 text-center">
-                    Who is Wiiry ?
-                </h1>
+    setTimeout(() => {
+      setFeedback("");
+      setCurrentQ((prev) => (prev + 1) % questions.length);
+    }, 1500);
+  };
 
-                {/* Wiiry Character Card */}
-                <div className="bg-blue-900 bg-opacity-30 border border-blue-600 rounded-2xl p-6 flex flex-col items-center max-w-sm mx-auto shadow-lg backdrop-blur-sm">
-                    <div className="relative w-48 h-48 rounded-full border-4 border-blue-400 p-1 mb-4 flex items-center justify-center">
-                        <img 
-                            src={wiiryImage} 
-                            alt="Wiiry Boy" 
-                            className="w-full h-full object-cover rounded-full" 
-                        />
-                        {/* Optional: Add a subtle glow effect around the image */}
-                        <div className="absolute inset-0 rounded-full animate-pulse-slow border-2 border-blue-300 opacity-0 transition-opacity duration-1000"></div>
-                    </div>
-                    
-                    {/* Wiiry Boy Title - Using custom font/glow if configured, or direct classes */}
-                    <h2 
-                        className="text-4xl font-extrabold text-white mb-6"
-                        // If you have 'Pixelify Sans' configured as 'font-pixel' in tailwind.config.js, use that
-                        // className="font-pixel text-4xl font-extrabold text-white mb-6"
-                        style={{ fontFamily: '"Pixelify Sans", sans-serif' }} // Fallback if not in Tailwind config
-                    >
-                        Wiiry Boy
-                    </h2>
+  return (
+    <div className="game-container" style={{ backgroundImage: `url(${bgImg})` }}>
+      <style>{`
+        .game-container {
+          width: 100%;
+          height: 100vh;
+          color: white;
+          position: relative;
+          overflow: hidden;
+          background-size: cover;
+          display: flex;
+          flex-direction: column;
+        }
 
-                    {/* Play Now Button */}
-                    <button
-                        className={`bg-[${ASTRO_PINK}] text-white px-10 py-3 rounded-lg font-semibold text-lg shadow-xl transition duration-300 hover:opacity-90`}
-                    >
-                        Play Now
-                    </button>
-                </div>
+        .score-feedback {
+          position: absolute;
+          top: 20px;
+          left: 50%;
+          transform: translateX(-50%);
+          text-align: center;
+          font-size: 28px;
+          font-weight: bold;
+          z-index: 10;
+        }
 
-                {/* Game Description */}
-                <div className="bg-gray-800 bg-opacity-50 rounded-lg p-8 mt-12 text-lg leading-relaxed shadow-lg backdrop-blur-sm text-justify">
-                    <p className="mb-4">
-                        In a world constantly changing and threatened by falling asteroids, Wiiry rises as the hero who has dedicated his life to protecting Earth and its people. He walks through different places — sometimes by the shore, other times across the desert — while above him, danger draws closer with every moment.
-                    </p>
-                    <p className="mb-4">
-                        But Wiiry never gives up. Each time an asteroid approaches, he faces critical decisions. The game offers him multiple options — if he chooses the right one, he saves lives and prevents disaster. If he chooses wrong, people will be harmed, and he will lose one of his three chances.
-                    </p>
-                    <p className="mb-0">
-                        He has only three attempts. Every choice shapes the planet's fate. Can you guide Wiiry to make the right decisions and save Earth?
-                    </p>
-                </div>
-            </div>
+        .game-content {
+          display: flex;
+          flex-direction: column;
+          flex-grow: 1;
+          justify-content: flex-start;
+          padding: 40px;
+        }
+
+        .asteroid-section {
+          display: flex;
+          align-items: flex-start;
+          gap: 30px;
+          margin-bottom: auto;
+        }
+
+        .asteroid {
+          width: 200px;
+          animation: bounce 2s infinite;
+          filter: drop-shadow(0px 4px 15px black);
+        }
+
+        .question-box {
+          background: rgba(0, 0, 0, 0.75);
+          border: 2px solid #d84594;
+          padding: 35px;
+          border-radius: 18px;
+          font-size: 28px;
+          font-weight: 600;
+          max-width: 650px;
+          line-height: 1.5;
+          box-shadow: 0 0 20px rgba(216, 69, 148, 0.6);
+          text-align: left;
+        }
+
+        .choices-section {
+          display: flex;
+          flex-direction: column;
+          gap: 25px;
+          width: 320px;
+          margin-top: auto;
+          margin-bottom: 50px;
+          align-self: flex-end; /* moves choices to right */
+        }
+
+        .choice-btn {
+          padding: 20px;
+          font-size: 22px;
+          font-weight: bold;
+          border-radius: 16px;
+          border: none;
+          cursor: pointer;
+          background: linear-gradient(to right, #d84594, #6b21a8);
+          color: white;
+          transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .choice-btn:hover {
+          transform: scale(1.05);
+          box-shadow: 0 0 20px rgba(216, 69, 148, 0.7);
+        }
+
+        .character {
+          position: absolute;
+          bottom: 20px;
+          left: 20px;
+          text-align: center;
+        }
+
+        .character-img {
+          width: 180px;
+          filter: drop-shadow(0px 4px 12px black);
+        }
+
+        .character-text {
+          background: rgba(0, 0, 0, 0.7);
+          margin-top: 10px;
+          padding: 10px 14px;
+          border-radius: 12px;
+          font-size: 20px;
+        }
+
+        @keyframes bounce {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-15px); }
+        }
+      `}</style>
+
+      <div className="score-feedback">
+        <p>Score: {score}</p>
+        <p>{feedback}</p>
+      </div>
+
+      <div className="game-content">
+        {/* Asteroid + Question top-left */}
+        <div className="asteroid-section">
+          <img src={asteroidImg} alt="asteroid" className="asteroid" />
+          <div className="question-box">{questions[currentQ].text}</div>
         </div>
-    );
+
+        {/* Choices pinned at bottom-right */}
+        <div className="choices-section">
+          {questions[currentQ].options.map((opt, i) => (
+            <button key={i} onClick={() => handleAnswer(i)} className="choice-btn">
+              {opt}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="character">
+        <img src={charImg} alt="character" className="character-img" />
+        <p className="character-text">I'm ready to help!</p>
+      </div>
+    </div>
+  );
 };
 
 export default Game;
