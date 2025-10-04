@@ -9,7 +9,7 @@
 ### What We Developed:
 AstroShield is a comprehensive asteroid impact simulation system combining real NASA data with advanced orbital mechanics. It features an interactive web application with world mapping and a sophisticated backend API powered by NASA's JPL Small-Body Database and other sources.
 
-![AstroShield Overview](Picture1.png)
+![AstroShield Overview](readme/readme/Picture1.png)
 
 ### How It Addresses the Challenge:
 - **Real-Time Threat Assessment** using NASA's JPL Small-Body Database and NASA NeoWs Database
@@ -35,25 +35,25 @@ Asteroid impacts pose genuine threats to Earth. AstroShield provides early warni
 ✓ **Expert mode and Simple View** for Asteroid data and analytics  
 ✓ **Color-blind friendly version** – Adjusts the colors of the website to allow inclusion of color blind people  
 
-![Accessibility Features](Picture2.png)
+![Accessibility Features](readme/Picture2.png)
 
 *As you can see, the colors of the website change to accommodate people who are color blind by changing the colors of the UI.*
 
 ### Dual View System
 
-![Simple vs Scientific View](Picture3.png)
+![Simple vs Scientific View](readme/Picture3.png)
 
 When assessing the asteroids, the website offers both a **simple view** and a **scientific view** (with the asteroid ID on top) to help both scientists and enthusiasts access the information in a way that fits them.
 
 ### Asteroid List Interface
 
-![Asteroid List Overview](Picture4.png)
+![Asteroid List Overview](readme/Picture4.png)
 
 The website displays the asteroids in a list to allow users to have an overview of the NEOs and clicking on them navigates you to the page which allows you to calculate the course of the asteroid, and the possible impact zone (if applicable).
 
 ### Interactive Educational Gaming
 
-![Wiiry Educational Game](Picture5.png)
+![Wiiry Educational Game](readme/Picture5.png)
 
 The game featuring our mascot **Wiiry** allows the user to learn about the methods of asteroid deflection by playing an interactive game.
 
@@ -109,7 +109,7 @@ The game featuring our mascot **Wiiry** allows the user to learn about the metho
 
 ## 4. SPACE AGENCY PARTNER & OTHER DATA SOURCES
 
-![Additional Data Sources](Picture7.png)
+![Additional Data Sources](readme/Picture7.png)
 
 - **OpenStreetMap** (Base mapping)
 - **Collins et al. Impact Scaling Laws** (Crater size calculations)
