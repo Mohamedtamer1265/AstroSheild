@@ -16,8 +16,7 @@ export default defineConfig({
       },
     }),
   ],
-  base:'/AstroSheild'
-  ,
+  base: '/', // Changed from '/AstroSheild' to '/' for local development
   server: {
     port: 3000,
   },

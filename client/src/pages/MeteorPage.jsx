@@ -64,7 +64,7 @@ export default function MeteorPage() {
     navigate('/meteor-info', { 
       state: { 
         asteroidData: asteroid,
-        fromPage: 'meteor-page'
+        fromPage: 'MeteorPage'
       } 
     });
   };
@@ -132,7 +132,17 @@ export default function MeteorPage() {
     <div className="min-h-screen bg-black text-white bg-[url('/stars-bg.png')] bg-cover p-6">
       {/* Header Stats */}
       <div className="text-center mb-6">
-        <h1 className="text-4xl font-bold mb-2">🌌 Near Earth Asteroids</h1>
+        <div className="flex items-center justify-between mb-4">
+          <button 
+            onClick={() => navigate('/')}
+            className="text-blue-400 hover:text-blue-300 transition-colors flex items-center space-x-2 px-4 py-2 rounded-lg border border-blue-500 hover:border-blue-400"
+          >
+            <span>←</span>
+            <span>Home</span>
+          </button>
+          <h1 className="text-4xl font-bold">🌌 Near Earth Asteroids</h1>
+          <div className="w-24"></div> {/* Spacer for alignment */}
+        </div>
         <p className="text-gray-300">
           Showing {filteredAsteroids.length} of {asteroids.length} asteroids from NASA NeoWs
         </p>

@@ -118,7 +118,7 @@ function Game() {
         {`
           @keyframes attackMoveDown {
             0% {
-              top: 5%;
+              top: 0%;
               transform: scale(1);
               opacity: 1;
             }
@@ -147,7 +147,7 @@ function Game() {
         style={{
           width: "230px",
           height: "230px",
-          top: "8%",
+          top: "0%",
           right: "8%",
         }}
         onAnimationEnd={() => setAttackAnimating(false)}
@@ -157,9 +157,10 @@ function Game() {
       <img
         src={neoImg}
         alt="Neo"
-        className="absolute bottom-10 left-10 z-20"
+        className="absolute bottom-20 z-20"
         style={{
           width: "300px",
+          left: "-50px",
           transform: "scaleX(-1)", // ✅ Flips character to face left
           filter: "drop-shadow(0 0 10px rgba(0,200,255,0.7))",
         }}
