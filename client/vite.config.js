@@ -12,9 +12,12 @@ export default defineConfig({
       // Keep your react plugins
       babel: {
         plugins: ['babel-plugin-react-compiler'],
+
       },
     }),
   ],
+  base:'/AstroSheild'
+  ,
   server: {
     port: 3000,
   },
