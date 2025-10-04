@@ -133,13 +133,26 @@ After deployment, verify these endpoints:
 
 ### Common Issues
 
+**Build Fails with "pip: command not found" (Exit code 127)**
+This project now includes multiple deployment options:
+
+1. **Dockerfile (Recommended)**: Railway will automatically detect and use the Dockerfile
+2. **Nixpacks**: Alternative buildpack approach
+
+If you get exit code 127:
+- Railway should automatically switch to Docker build
+- Check Railway logs for build progress
+- Verify `requirements.txt` has no syntax errors
+
 **Build Fails**
 - Check that `client/package.json` has all required dependencies
 - Verify `server/requirements.txt` is up to date
+- Try switching build method in Railway settings
 
 **App Won't Start**
 - Check Railway logs for Python import errors
 - Verify all environment variables are set
+- Ensure port configuration is correct
 
 **API Requests Fail**
 - Check CORS configuration in `server/app.py`

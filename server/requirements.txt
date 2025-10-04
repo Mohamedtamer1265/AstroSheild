@@ -1,32 +1,9 @@
-# 🌍☄️ Asteroid Impact Modeling API - Requirements
-# NASA Space Apps 2024
-
-# Core Flask framework
 Flask==2.3.3
 flask-cors==4.0.0
-
-# Scientific computing and data analysis
 numpy==1.24.3
 pandas==2.0.3
 matplotlib==3.7.2
 seaborn==0.12.2
-
-# HTTP requests for API integration
 requests==2.31.0
-
-# Logging and utilities
 python-dateutil==2.8.2
-
-# Optional geospatial libraries (install if needed)
-# folium==0.14.0
-# geopandas==0.13.2
-
-# Development and testing (optional)
-# pytest==7.4.0
-# pytest-flask==1.2.0
-# black==23.7.0
-# flake8==6.0.0
-
-# Production server (optional)
-# gunicorn==21.2.0
-# waitress==2.1.2
+gunicorn==21.2.0
