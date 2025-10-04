@@ -1,21 +1,9 @@
-# AstroShield Flask API Requirements
+# AstroShield Flask API Requirements - Minimal for Railway
 # NASA Space Apps 2024
 
-# Core Flask framework
-Flask==2.3.3
+Flask==3.0.0
 flask-cors==4.0.0
-
-# Scientific computing and data analysis
-numpy==1.24.3
-pandas==2.0.3
-matplotlib==3.7.2
-seaborn==0.12.2
-
-# HTTP requests for API integration
 requests==2.31.0
-
-# Logging and utilities
+numpy==1.26.0
 python-dateutil==2.8.2
-
-# Production server for Railway deployment
 gunicorn==21.2.0

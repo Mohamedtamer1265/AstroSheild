@@ -1,1 +1,1 @@
-web: cd server && python app.py
+web: gunicorn --bind 0.0.0.0:$PORT wsgi:application
