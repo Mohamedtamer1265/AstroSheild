@@ -9,7 +9,7 @@
 ### What We Developed:
 AstroShield is a comprehensive asteroid impact simulation system combining real NASA data with advanced orbital mechanics. It features an interactive web application with world mapping and a sophisticated backend API powered by NASA's JPL Small-Body Database and other sources.
 
-![AstroShield Overview](readme/readme/Picture1.png)
+![AstroShield Overview](readme/Picture1.png)
 
 ### How It Addresses the Challenge:
 - **Real-Time Threat Assessment** using NASA's JPL Small-Body Database and NASA NeoWs Database
@@ -79,7 +79,7 @@ The game featuring our mascot **Wiiry** allows the user to learn about the metho
 
 ## 3. NASA DATA USAGE
 
-![NASA Data Integration](Picture6.png)
+![NASA Data Integration](readme/Picture6.png)
 
 ### Primary NASA Data Sources:
 
