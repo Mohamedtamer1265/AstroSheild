@@ -47,7 +47,8 @@
     "choices": [
       { "choice_a": "Laser Ablation" },
       { "choice_b": "Kinetic Impactor" },
-      { "choice_c": "Nuclear Explosives" }
+      { "choice_c": "Nuclear Explosives" },
+      { "choice_d": "Gravity Tractor" }
     ],
     "correct_answer": "Nuclear Explosives",
     "justification": "Nuclear Explosives offer the highest energy density and can deflect very large asteroids quickly. This is designated as the last-resort option for very large asteroids with short warning times."
@@ -82,7 +83,8 @@
     "choices": [
       { "choice_a": "Kinetic Impactor" },
       { "choice_b": "Laser Ablation" },
-      { "choice_c": "Gravity Tractor" }
+      { "choice_c": "Gravity Tractor" },
+      { "choice_d": "Ion-Beam Shepherd" }
     ],
     "correct_answer": "Laser Ablation",
     "justification": "Laser Ablation uses high-power lasers or mirrors to focus sunlight to vaporize the surface, creating jets that push the asteroid. This method requires huge power demands (megawatts) and is designed for very large asteroids with decades of warning, representing future technology."
@@ -115,13 +117,10 @@
     },
     "question": "Asteroid X-7 is perfectly suited for the Kinetic Impactor method. In addition to the physical force of the spacecraft collision, what secondary mechanism actually amplifies the deflection effect achieved by a Kinetic Impactor?",
     "choices": [
-      {
-        "choice_a": "The resultant heat vaporizes material, causing a jet thrust."
-      },
-      {
-        "choice_b": "The magnetic field generated pulls the asteroid off course."
-      },
-      { "choice_c": "The debris ejecta amplify the effect." }
+      { "choice_a": "The resultant heat vaporizes material, causing a jet thrust." },
+      { "choice_b": "The magnetic field generated pulls the asteroid off course." },
+      { "choice_c": "The debris ejecta amplify the effect." },
+      { "choice_d": "The solar radiation pressure pushes the fragments." }
     ],
     "correct_answer": "The debris ejecta amplify the effect.",
     "justification": "The benefits of the Kinetic Impactor include demonstrated success, being relatively simple, and the fact that debris ejecta amplify the effect."
@@ -136,13 +135,10 @@
     },
     "question": "Asteroid X-8 is very large and its composition is highly uncertain, making the precise Gravity Tractor method seem ideal. However, we only have 5 years until impact. Why is the Gravity Tractor method completely unsuitable for this scenario?",
     "choices": [
-      {
-        "choice_a": "It requires massive spacecraft that cannot be built in time."
-      },
+      { "choice_a": "It requires massive spacecraft that cannot be built in time." },
       { "choice_b": "It is extremely slow and requires decades." },
-      {
-        "choice_c": "It is still theoretical and has not been tested in space."
-      }
+      { "choice_c": "It is still theoretical and has not been tested in space." },
+      { "choice_d": "It cannot work on asteroids larger than 1 kilometer." }
     ],
     "correct_answer": "It is extremely slow and requires decades.",
     "justification": "The Gravity Tractor is highly precise and works on any asteroid type, but its major limitation is that it is extremely slow and requires decades to be effective. It is intended for scenarios with very long warning times."
@@ -158,10 +154,9 @@
     "question": "Due to the short warning time for Asteroid X-9, the highly energetic Nuclear Explosives method must be considered as a last resort. What is the main political/legal limitation cited by NASA research regarding the use of nuclear devices in space for deflection?",
     "choices": [
       { "choice_a": "It requires huge power demands (megawatts)." },
-      {
-        "choice_b": "It is highly theoretical and requires 100–300 kW+ power."
-      },
-      { "choice_c": "Legal barriers, as they are banned by treaties." }
+      { "choice_b": "It is highly theoretical and requires 100–300 kW+ power." },
+      { "choice_c": "Legal barriers, as they are banned by treaties." },
+      { "choice_d": "It cannot be tested safely on Earth." }
     ],
     "correct_answer": "Legal barriers, as they are banned by treaties.",
     "justification": "Nuclear Explosives, while offering the highest energy density, are limited by legal barriers and political concerns, as real tests are banned by treaties."
@@ -178,7 +173,8 @@
     "choices": [
       { "choice_a": "Requires very high power (100–300 kW+)." },
       { "choice_b": "Requires minimal power (under 1 kW)." },
-      { "choice_c": "Requires huge power demands (megawatts)." }
+      { "choice_c": "Requires huge power demands (megawatts)." },
+      { "choice_d": "Requires solar panel arrays only." }
     ],
     "correct_answer": "Requires very high power (100–300 kW+).",
     "justification": "The Ion-Beam Shepherd is a theoretical method that has the limitation of requiring very high power (100–300 kW+)."
@@ -195,7 +191,8 @@
     "choices": [
       { "choice_a": "Small nuclear reactors embedded on the surface." },
       { "choice_b": "Mirrors to focus sunlight." },
-      { "choice_c": "Kinetic Impactor spacecraft with solar sails." }
+      { "choice_c": "Kinetic Impactor spacecraft with solar sails." },
+      { "choice_d": "Ion thrusters aimed at the surface." }
     ],
     "correct_answer": "Mirrors to focus sunlight.",
     "justification": "The Laser Ablation method involves using high-power lasers or mirrors to focus sunlight to vaporize the surface, creating jets that push the asteroid."
@@ -210,13 +207,10 @@
     },
     "question": "Asteroid X-12 falls within the size and warning time parameters for a Kinetic Impactor. However, if exploration reveals the asteroid is loosely aggregated (a 'rubble pile'), why might the Kinetic Impactor fail, necessitating a switch to the slower Gravity Tractor?",
     "choices": [
-      {
-        "choice_a": "The Kinetic Impactor method is only designed for asteroids larger than 300 m."
-      },
-      {
-        "choice_b": "The effectiveness depends heavily on asteroid composition."
-      },
-      { "choice_c": "Only Laser Ablation can handle rubble pile asteroids." }
+      { "choice_a": "The Kinetic Impactor method is only designed for asteroids larger than 300 m." },
+      { "choice_b": "The effectiveness depends heavily on asteroid composition." },
+      { "choice_c": "Only Laser Ablation can handle rubble pile asteroids." },
+      { "choice_d": "Nuclear explosives are required for rubble piles." }
     ],
     "correct_answer": "The effectiveness depends heavily on asteroid composition.",
     "justification": "A key limitation of the Kinetic Impactor is that its effectiveness depends heavily on asteroid composition. If the asteroid is too porous or weakly bound, the energy transfer may not achieve the necessary deflection."
@@ -233,7 +227,8 @@
     "choices": [
       { "choice_a": "The asteroid broke into three fragments." },
       { "choice_b": "Its orbit was shortened by 32 minutes." },
-      { "choice_c": "The asteroid’s mass was reduced by 10%." }
+      { "choice_c": "The asteroid's mass was reduced by 10%." },
+      { "choice_d": "The asteroid was completely vaporized." }
     ],
     "correct_answer": "Its orbit was shortened by 32 minutes.",
     "justification": "The DART mission (2022) successfully struck Dimorphos, shortening its orbit by 32 minutes."
@@ -248,11 +243,10 @@
     },
     "question": "The Gravity Tractor method is best for Asteroid X-14 due to its size and long warning time. NASA research on this method was studied as part of which specific conceptual mission effort?",
     "choices": [
-      {
-        "choice_a": "The Planetary Defense Coordination Office (PDCO) program."
-      },
+      { "choice_a": "The Planetary Defense Coordination Office (PDCO) program." },
       { "choice_b": "The Asteroid Redirect Mission (ARM) concepts." },
-      { "choice_c": "The Hera mission plans." }
+      { "choice_c": "The Hera mission plans." },
+      { "choice_d": "The Near-Earth Object Surveyor mission." }
     ],
     "correct_answer": "The Asteroid Redirect Mission (ARM) concepts.",
     "justification": "NASA research into the Gravity Tractor method was studied in Asteroid Redirect Mission (ARM) concepts."
@@ -269,7 +263,8 @@
     "choices": [
       { "choice_a": "Lawrence Livermore National Lab (LLNL)" },
       { "choice_b": "Jet Propulsion Laboratory (JPL)" },
-      { "choice_c": "Planetary Defense Coordination Office (PDCO)" }
+      { "choice_c": "Planetary Defense Coordination Office (PDCO)" },
+      { "choice_d": "Marshall Space Flight Center" }
     ],
     "correct_answer": "Jet Propulsion Laboratory (JPL)",
     "justification": "JPL studies are referenced for the Ion-Beam Shepherd concept and NASA/JPL studies are noted for gravity tractors and the ion-beam shepherd."
@@ -286,7 +281,8 @@
     "choices": [
       { "choice_a": "It prevents the asteroid from spinning." },
       { "choice_b": "It is adjustable." },
-      { "choice_c": "It uses solar sails as a secondary pusher." }
+      { "choice_c": "It uses solar sails as a secondary pusher." },
+      { "choice_d": "It requires no external power source." }
     ],
     "correct_answer": "It is adjustable.",
     "justification": "A key benefit of Laser Ablation is that the resulting force is contactless, adjustable, and continuous."
@@ -303,7 +299,8 @@
     "choices": [
       { "choice_a": "Lawrence Livermore National Lab" },
       { "choice_b": "Jet Propulsion Laboratory (JPL)" },
-      { "choice_c": "European Space Agency (ESA)" }
+      { "choice_c": "European Space Agency (ESA)" },
+      { "choice_d": "Los Alamos National Laboratory" }
     ],
     "correct_answer": "Lawrence Livermore National Lab",
     "justification": "Nuclear deflection research is specifically associated with Lawrence Livermore National Lab."
@@ -320,9 +317,10 @@
     "choices": [
       { "choice_a": "The Asteroid Redirect Mission (ARM)" },
       { "choice_b": "The Double Asteroid Redirection Test (DART)" },
-      { "choice_c": "The Planetary Defense Coordination Office (PDCO)" }
+      { "choice_c": "The Planetary Defense Coordination Office (PDCO)" },
+      { "choice_d": "The Near-Earth Object Observations Program" }
     ],
     "correct_answer": "The Planetary Defense Coordination Office (PDCO)",
-    "justification": "NASA’s Planetary Defense Coordination Office (PDCO) develops and tests several methods to prevent potential asteroid impacts."
+    "justification": "NASA's Planetary Defense Coordination Office (PDCO) develops and tests several methods to prevent potential asteroid impacts."
   }
 ]
