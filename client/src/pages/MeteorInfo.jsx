@@ -21,7 +21,7 @@ const MeteorInfo = () => {
   // If no asteroid data, redirect back
   useEffect(() => {
     if (!asteroidData) {
-      navigate('/meteor-page');
+      navigate('/MeteorPage');
     } else {
       // Fetch detailed data from JPL if we have an ID
       fetchDetailedAsteroidData();
@@ -117,7 +117,7 @@ const MeteorInfo = () => {
           <h2 className="text-2xl font-bold mb-2">No Asteroid Data</h2>
           <p className="text-gray-400 mb-4">Please select an asteroid from the main page</p>
           <button 
-            onClick={() => navigate('/meteor-page')}
+            onClick={() => navigate('/MeteorPage')}
             className="px-6 py-3 bg-blue-600 rounded-lg hover:bg-blue-700"
           >
             Back to Asteroids
@@ -137,10 +137,10 @@ const MeteorInfo = () => {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <button 
-                onClick={() => navigate(fromPage === 'meteor-page' ? '/meteor-page' : '/')}
+                onClick={() => navigate(fromPage === 'MeteorPage' ? '/MeteorPage' : '/')}
                 className="text-blue-400 hover:text-blue-300 transition-colors"
               >
-                ← Back to {fromPage === 'meteor-page' ? 'Asteroids' : 'Home'}
+                ← Back to {fromPage === 'MeteorPage' ? 'Asteroids' : 'Home'}
               </button>
               <div>
                 <h1 className="text-2xl font-bold">
@@ -570,37 +570,50 @@ const MeteorInfo = () => {
         {activeTab === "visualization" && (
           <div className="bg-black/60 border border-blue-500 rounded-lg p-6">
             <h2 className="text-2xl font-bold mb-6">📍 Location Visualization</h2>
-            {impactData ? (
-              <div className="space-y-6">
-                <div className="text-center">
-                  <p className="text-gray-400 mb-4">
-                    Predicted impact location: {formatNumber(impactData.impact_coordinates.latitude, 4)}°N, 
-                    {formatNumber(impactData.impact_coordinates.longitude, 4)}°E
-                  </p>
-                </div>
-                <div className="h-96 bg-gray-800 rounded-lg flex items-center justify-center">
-                  <Map 
-                    impactLocation={{
-                      lat: impactData.impact_coordinates.latitude,
-                      lng: impactData.impact_coordinates.longitude
-                    }}
-                    asteroidData={asteroidData}
-                  />
-                </div>
-              </div>
-            ) : (
-              <div className="text-center py-12">
-                <div className="text-6xl mb-4">🗺️</div>
-                <p className="text-xl mb-4">Generate impact prediction to view location</p>
-                <button 
-                  onClick={fetchImpactPrediction}
-                  disabled={loading}
-                  className="px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors disabled:opacity-50"
-                >
-                  {loading ? "🔄 Generating..." : "🎯 Generate Prediction"}
-                </button>
-              </div>
-            )}
+            <div className="space-y-6">
+              {impactData ? (
+                <>
+                  <div className="text-center">
+                    <p className="text-gray-400 mb-4">
+                      Predicted impact location: {formatNumber(impactData.impact_coordinates.latitude, 4)}°N, 
+                      {formatNumber(impactData.impact_coordinates.longitude, 4)}°E
+                    </p>
+                  </div>
+                  <div className="h-96 bg-gray-800 rounded-lg flex items-center justify-center">
+                    <Map 
+                      impactLocation={{
+                        lat: impactData.impact_coordinates.latitude,
+                        lng: impactData.impact_coordinates.longitude
+                      }}
+                      asteroidData={asteroidData}
+                    />
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="text-center">
+                    <p className="text-gray-400 mb-4">
+                      Asteroid trajectory visualization - Generate impact prediction to view precise impact location
+                    </p>
+                  </div>
+                  <div className="h-96 bg-gray-800 rounded-lg flex items-center justify-center">
+                    <Map 
+                      impactLocation={null}
+                      asteroidData={asteroidData}
+                    />
+                  </div>
+                  <div className="text-center py-6">
+                    <button 
+                      onClick={fetchImpactPrediction}
+                      disabled={loading}
+                      className="px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors disabled:opacity-50"
+                    >
+                      {loading ? "🔄 Generating..." : "🎯 Generate Prediction"}
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
           </div>
         )}
       </div>

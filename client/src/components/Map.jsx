@@ -37,8 +37,10 @@ const MapClickHandler = ({ onLocationSelect, impactData, setImpactData }) => {
         onLocationSelect(lat, lng);
       }
 
-      // Simulate asteroid impact at clicked location
-      await simulateAsteroidImpact(lat, lng, setImpactData);
+      // Only simulate asteroid impact if setImpactData is provided
+      if (setImpactData) {
+        await simulateAsteroidImpact(lat, lng, setImpactData);
+      }
     },
   });
 
@@ -55,13 +57,19 @@ const MapClickHandler = ({ onLocationSelect, impactData, setImpactData }) => {
 
 // Simulate asteroid impact using the documented API
 const simulateAsteroidImpact = async (lat, lng, setImpactData) => {
+  // Safety check - if setImpactData is not provided, don't proceed
+  if (!setImpactData) {
+    console.log('No setImpactData function provided, skipping impact simulation');
+    return;
+  }
+
   try {
     setImpactData(null); // Clear previous data
     
     // Default asteroid parameters - can be customized
     const impactParams = {
       diameter_m: 1000.0,           // 1km asteroid
-      velocity_km_s: 2.0,          // 2 km/s impact velocity
+      velocity_km_s: 20.0,          // 20 km/s impact velocity
       density_kg_m3: 2600,          // Stone asteroid
       angle_degrees: 45,            // 45-degree impact angle
       impact_lat: lat,
@@ -116,32 +124,31 @@ const simulateAsteroidImpact = async (lat, lng, setImpactData) => {
 
 // Transform API response to match the expected format for the UI
 const transformApiResponse = (apiData) => {
-  // The API might return data in a different structure
-  // This function ensures compatibility with the existing UI code
+  // The API returns data according to the documentation structure
   return {
     impact_parameters: {
-      diameter_m: apiData.asteroid_properties?.diameter_m || apiData.impact_parameters?.diameter_m || 1000,
-      velocity_km_s: apiData.asteroid_properties?.velocity_km_s || apiData.impact_parameters?.velocity_km_s || 20,
-      density_kg_m3: apiData.asteroid_properties?.density_kg_m3 || apiData.impact_parameters?.density_kg_m3 || 2600,
-      angle_degrees: apiData.asteroid_properties?.angle_degrees || apiData.impact_parameters?.angle_degrees || 45,
+      diameter_m: apiData.impact_parameters?.diameter_m || 1000,
+      velocity_km_s: apiData.impact_parameters?.velocity_km_s || 20,
+      density_kg_m3: apiData.impact_parameters?.density_kg_m3 || 2600,
+      angle_degrees: apiData.impact_parameters?.angle_degrees || 45,
     },
     location: {
-      latitude: apiData.impact_location?.latitude || apiData.location?.latitude,
-      longitude: apiData.impact_location?.longitude || apiData.location?.longitude,
-      elevation_m: apiData.impact_location?.elevation_m || apiData.location?.elevation_m || 0,
-      location_name: apiData.impact_location?.name || apiData.location?.location_name
+      latitude: apiData.location?.latitude,
+      longitude: apiData.location?.longitude,
+      elevation_m: apiData.location?.elevation_m || 0,
+      location_name: apiData.location?.location_name
     },
     impact_effects: {
-      crater_diameter_m: (apiData.analysis?.crater?.diameter_km || apiData.impact_effects?.crater_diameter_m / 1000 || 15) * 1000,
-      crater_depth_m: apiData.analysis?.crater?.depth_m || apiData.impact_effects?.crater_depth_m || 2500,
-      seismic_magnitude: apiData.analysis?.seismic?.moment_magnitude || apiData.impact_effects?.seismic_magnitude || 7.2,
-      seismic_radius_km: apiData.analysis?.seismic?.damage_radius_km || apiData.impact_effects?.seismic_radius_km || 500,
-      air_blast_radius_km: Math.max(...Object.values(apiData.analysis?.air_blast_ranges || {})) || apiData.impact_effects?.air_blast_radius_km || 200,
-      thermal_radius_km: apiData.analysis?.thermal_radius_km || apiData.impact_effects?.thermal_radius_km || 150
+      crater_diameter_m: apiData.impact_effects?.crater_diameter_m || 15000,
+      crater_depth_m: apiData.impact_effects?.crater_depth_m || 2500,
+      seismic_magnitude: apiData.impact_effects?.seismic_magnitude || 7.2,
+      seismic_radius_km: apiData.impact_effects?.seismic_radius_km || 500,
+      air_blast_radius_km: apiData.impact_effects?.air_blast_radius_km || 200,
+      thermal_radius_km: apiData.impact_effects?.thermal_radius_km || 150
     },
     casualties: {
-      estimated_deaths: apiData.summary?.total_fatalities || apiData.casualties?.estimated_deaths || 50000,
-      estimated_injuries: apiData.summary?.total_injuries || apiData.casualties?.estimated_injuries || 200000,
+      estimated_deaths: apiData.casualties?.estimated_deaths || 50000,
+      estimated_injuries: apiData.casualties?.estimated_injuries || 200000,
       population_affected: apiData.casualties?.population_affected || 8000000,
       confidence_level: apiData.casualties?.confidence_level || "medium"
     }
@@ -176,7 +183,7 @@ const createMockImpactData = (lat, lng, params) => {
 };
 
 // Main Map component
-const Map = () => {
+const Map = ({ impactLocation = null, asteroidData = null }) => {
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [impactData, setImpactData] = useState(null);
   const [apiStatus, setApiStatus] = useState('checking'); // 'checking', 'connected', 'disconnected'
@@ -186,6 +193,18 @@ const Map = () => {
     density_kg_m3: 2600,
     angle_degrees: 45
   });
+
+  // Set initial map center based on impact location
+  const getInitialMapCenter = () => {
+    if (impactLocation) {
+      return [impactLocation.lat, impactLocation.lng];
+    }
+    return [20, 0]; // Default center on equator
+  };
+
+  const getInitialZoom = () => {
+    return impactLocation ? 8 : 2; // Zoom in if we have an impact location
+  };
 
   // Check API connection on component mount
   useEffect(() => {
@@ -209,6 +228,42 @@ const Map = () => {
     checkApiConnection();
   }, []);
 
+  // Set impact data if provided via props
+  useEffect(() => {
+    if (impactLocation && asteroidData) {
+      // Create impact data from the provided asteroid data and impact location
+      const impactDataFromProps = {
+        impact_parameters: {
+          diameter_m: asteroidData.estimated_diameter_km_max ? asteroidData.estimated_diameter_km_max * 1000 : 1000,
+          velocity_km_s: asteroidData.relative_velocity_km_s || 20,
+          density_kg_m3: 2600, // Default density
+          angle_degrees: 45 // Default angle
+        },
+        location: {
+          latitude: impactLocation.lat,
+          longitude: impactLocation.lng,
+          elevation_m: 0,
+          location_name: `${asteroidData.name} Impact Site`
+        },
+        impact_effects: {
+          crater_diameter_m: asteroidData.estimated_diameter_km_max ? asteroidData.estimated_diameter_km_max * 1000 * 15 : 15000, // Rough estimate: 15x diameter
+          crater_depth_m: asteroidData.estimated_diameter_km_max ? asteroidData.estimated_diameter_km_max * 1000 * 2.5 : 2500,
+          seismic_magnitude: asteroidData.estimated_diameter_km_max ? Math.min(6 + Math.log10(asteroidData.estimated_diameter_km_max * 1000), 10) : 7.2,
+          seismic_radius_km: 500,
+          air_blast_radius_km: 200,
+          thermal_radius_km: 150
+        },
+        casualties: {
+          estimated_deaths: 50000,
+          estimated_injuries: 200000,
+          population_affected: 8000000,
+          confidence_level: "medium"
+        }
+      };
+      setImpactData(impactDataFromProps);
+    }
+  }, [impactLocation, asteroidData]);
+
   const handleLocationSelect = (lat, lng) => {
     setSelectedLocation({ lat, lng });
   };
@@ -223,13 +278,14 @@ const Map = () => {
       background: 'url(../assets/img/introgame.jpg) no-repeat center center fixed',
 //backgroundSize: '400px 200px, 400px 200px, 400px 200px, 400px 200px, 400px 200px, 400px 200px, 400px 200px, 400px 200px, 400px 200px, 400px 200px, 100% 100%'
     }}>
-      <div className="bg-white/5 backdrop-blur-sm text-white p-6 rounded-xl mb-6 border border-white/20 shadow-xl">
+        <div className="bg-white/5 backdrop-blur-sm text-white p-6 rounded-xl mb-6 border border-white/20 shadow-xl">
         <h2 className="text-3xl font-light mb-2 text-center tracking-wide">🌍 Asteroid Impact Simulator</h2>
         <p className="mb-2 text-center text-white/80 font-light">
-          Click anywhere on the map to simulate an asteroid impact at that location.
-        </p>
-        
-        {/* API Status Indicator */}
+          {impactLocation ? 
+            `Showing impact location for ${asteroidData?.name || 'selected asteroid'}` :
+            "Click anywhere on the map to simulate an asteroid impact at that location."
+          }
+        </p>        {/* API Status Indicator */}
         <div className="flex items-center justify-center mt-4">
           <div className="flex items-center space-x-2">
             <div className={`w-2 h-2 rounded-full ${
@@ -252,8 +308,8 @@ const Map = () => {
         {/* Map Container - Made smaller */}
         <div className="relative w-2/3" style={{ height: "400px" }}>
           <MapContainer
-            center={[20, 0]} // Center on equator
-            zoom={2}
+            center={getInitialMapCenter()}
+            zoom={getInitialZoom()}
             className="w-full h-full rounded-2xl border border-white/20 shadow-2xl overflow-hidden"
             style={{ height: "100%" }}
           >
@@ -262,37 +318,40 @@ const Map = () => {
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             />
             
-            <MapClickHandler 
-              onLocationSelect={handleLocationSelect}
-              impactData={impactData}
-              setImpactData={setImpactData}
-            />
+            {/* Only add click handler if this is an interactive map (no predefined impact location) */}
+            {!impactLocation && (
+              <MapClickHandler 
+                onLocationSelect={handleLocationSelect}
+                impactData={impactData}
+                setImpactData={setImpactData}
+              />
+            )}
 
             {/* Display impact marker and effects */}
             {impactData && (
               <>
                 {/* Impact point marker */}
                 <Marker 
-                  position={[impactData.location.latitude, impactData.location.longitude]}
+                  position={[impactData.location?.latitude || 0, impactData.location?.longitude || 0]}
                   icon={impactIcon}
                 >
                   <Popup>
                     <div className="p-2">
                       <h3 className="font-bold text-lg mb-2">🌠 Asteroid Impact</h3>
-                      <p><strong>Location:</strong> {impactData.location.location_name}</p>
-                      <p><strong>Coordinates:</strong> {impactData.location.latitude.toFixed(4)}°, {impactData.location.longitude.toFixed(4)}°</p>
-                      <p><strong>Crater Diameter:</strong> {(impactData.impact_effects.crater_diameter_m / 1000).toFixed(1)} km</p>
-                      <p><strong>Seismic Magnitude:</strong> {impactData.impact_effects.seismic_magnitude}</p>
-                      <p><strong>Estimated Deaths:</strong> {impactData.casualties.estimated_deaths.toLocaleString()}</p>
-                      <p><strong>Estimated Injuries:</strong> {impactData.casualties.estimated_injuries.toLocaleString()}</p>
+                      <p><strong>Location:</strong> {impactData.location?.location_name || "Unknown"}</p>
+                      <p><strong>Coordinates:</strong> {(impactData.location?.latitude || 0).toFixed(4)}°, {(impactData.location?.longitude || 0).toFixed(4)}°</p>
+                      <p><strong>Crater Diameter:</strong> {((impactData.impact_effects?.crater_diameter_m || 0) / 1000).toFixed(1)} km</p>
+                      <p><strong>Seismic Magnitude:</strong> {impactData.impact_effects?.seismic_magnitude || 0}</p>
+                      <p><strong>Estimated Deaths:</strong> {(impactData.casualties?.estimated_deaths || 0).toLocaleString()}</p>
+                      <p><strong>Estimated Injuries:</strong> {(impactData.casualties?.estimated_injuries || 0).toLocaleString()}</p>
                     </div>
                   </Popup>
                 </Marker>
 
                 {/* Crater circle */}
                 <Circle
-                  center={[impactData.location.latitude, impactData.location.longitude]}
-                  radius={impactData.impact_effects.crater_diameter_m / 2}
+                  center={[impactData.location?.latitude || 0, impactData.location?.longitude || 0]}
+                  radius={(impactData.impact_effects?.crater_diameter_m || 0) / 2}
                   pathOptions={{
                     color: 'red',
                     weight: 3,
@@ -304,8 +363,8 @@ const Map = () => {
 
                 {/* Thermal effects circle */}
                 <Circle
-                  center={[impactData.location.latitude, impactData.location.longitude]}
-                  radius={impactData.impact_effects.thermal_radius_km * 1000}
+                  center={[impactData.location?.latitude || 0, impactData.location?.longitude || 0]}
+                  radius={(impactData.impact_effects?.thermal_radius_km || 0) * 1000}
                   pathOptions={{
                     color: 'orange',
                     weight: 2,
@@ -317,8 +376,8 @@ const Map = () => {
 
                 {/* Air blast circle */}
                 <Circle
-                  center={[impactData.location.latitude, impactData.location.longitude]}
-                  radius={impactData.impact_effects.air_blast_radius_km * 1000}
+                  center={[impactData.location?.latitude || 0, impactData.location?.longitude || 0]}
+                  radius={(impactData.impact_effects?.air_blast_radius_km || 0) * 1000}
                   pathOptions={{
                     color: 'yellow',
                     weight: 2,
@@ -330,8 +389,8 @@ const Map = () => {
 
                 {/* Seismic effects circle */}
                 <Circle
-                  center={[impactData.location.latitude, impactData.location.longitude]}
-                  radius={impactData.impact_effects.seismic_radius_km * 1000}
+                  center={[impactData.location?.latitude || 0, impactData.location?.longitude || 0]}
+                  radius={(impactData.impact_effects?.seismic_radius_km || 0) * 1000}
                   pathOptions={{
                     color: 'purple',
                     weight: 1,

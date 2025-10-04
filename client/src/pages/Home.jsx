@@ -145,7 +145,7 @@ const Home = () => {
         <div className="relative z-10 text-center mt-12">
           <button
             className="bg-[#d84594] text-white px-12 py-4 rounded-full font-semibold text-xl shadow-lg transition duration-300 hover:opacity-90 hover:scale-105"
-            onClick={() => navigate("/asteroid")}
+            onClick={() => navigate("/explore")}
           >
             🚀 Start Exploring
           </button>

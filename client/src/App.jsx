@@ -10,6 +10,7 @@ import {
 } from "react-router-dom";
 import MeteorPage from "./pages/MeteorPage";
 import MeteorInfo from "./pages/MeteorInfo";
+import ExploreMode from "./pages/ExploreMode";
 import AsteroidDashboard from "./pages/asteroid";
 import { AccessibilityProvider } from "./contexts/AccessibilityContext";
 import "./styles/accessibility.css";
@@ -23,6 +24,7 @@ const router = createBrowserRouter(
       </Route>
       <Route path="/MeteorPage" element={<MeteorPage></MeteorPage>} />
       <Route path="/meteor-info" element={<MeteorInfo></MeteorInfo>} />
+                  <Route path="/explore" element={<ExploreMode />} />
       <Route path="/Game" element={<Game></Game>} />
       <Route
         path="/astroid"

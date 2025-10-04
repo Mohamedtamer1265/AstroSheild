@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Map from "../components/map";
+import Map from "../components/Map";
 
 const AsteroidDashboard = () => {
   const [asteroid, setAsteroid] = useState(null);
@@ -173,7 +173,7 @@ const AsteroidDashboard = () => {
           </div>
         </div>
       </div>
-      <Map/>
+      <Map impactLocation={null} asteroidData={null} />
     </div>
   );
 };
