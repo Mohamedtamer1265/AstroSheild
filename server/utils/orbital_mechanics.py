@@ -4,10 +4,26 @@ Implements proper orbital mechanics for asteroid trajectory and position predict
 """
 
 import math
-import numpy as np
 import logging
 from datetime import datetime, timedelta
 from typing import Dict, Tuple
+
+# Conditional numpy import for Railway deployment
+try:
+    import numpy as np
+except ImportError:
+    # Fallback for when numpy is not available
+    class MockNumpy:
+        def array(self, data):
+            return data
+        def linalg(self):
+            return self
+        def norm(self, data):
+            # Simple 3D distance calculation
+            if len(data) == 3:
+                return (data[0]**2 + data[1]**2 + data[2]**2)**0.5
+            return sum(x**2 for x in data)**0.5
+    np = MockNumpy()
 
 logger = logging.getLogger(__name__)
 

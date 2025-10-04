@@ -5,7 +5,7 @@ const Navbar = () => {
 
   const links = [
     { href: "#home-section", label: "Home" },
-    { href: "#create-asteroid-section", label: "Create" },
+    { href: "#explanation-section", label: "Explain" },
     { href: "#game-section", label: "Game" },
   ];
 

@@ -33,8 +33,22 @@ def create_app():
     """Create and configure the Flask application."""
     app = Flask(__name__)
     
-    # Enable CORS for React frontend
-    CORS(app, origins=["http://localhost:3000", "http://localhost:5173", "http://localhost:3002"])
+    # Enable CORS for React frontend (development and production)
+    allowed_origins = [
+        "http://localhost:3000", 
+        "http://localhost:5173",
+        "http://localhost:3001"  # Your current Vite dev server
+    ]
+    
+    # Add production origins if deployed
+    if os.environ.get('RAILWAY_ENVIRONMENT'):
+        # Add your deployed frontend URL here when you deploy the frontend
+        allowed_origins.extend([
+            "https://your-frontend-domain.vercel.app",  # Replace with actual domain
+            "https://your-frontend-domain.railway.app"   # Replace with actual domain
+        ])
+    
+    CORS(app, origins=allowed_origins)
     
     # Configuration
     app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'nasa-space-apps-2024')
@@ -133,9 +147,7 @@ def create_app():
                     'predict_multi_asteroid': '/api/predict/multi-asteroid',
                     'assess_impact_risk': '/api/predict/risk/<asteroid_id>',
                     'search_asteroids': '/api/asteroids/search',
-                    'get_asteroid_data': '/api/asteroids/<asteroid_id>',
-                    'notable_asteroids': '/api/asteroids/list/notable',
-                    'search_all_asteroids': '/api/asteroids/list/search-all'
+                    'get_asteroid_data': '/api/asteroids/<asteroid_id>'
                 },
                 'capabilities': [
                     'Asteroid impact physics modeling',
@@ -430,149 +442,24 @@ def create_app():
                 'error': f'Asteroid data fetch failed: {str(e)}'
             }), 500
     
-    @app.route('/api/asteroids/list/notable', methods=['GET'])
-    def get_notable_asteroids():
-        """
-        Get a list of notable asteroids including NEOs and PHAs
-        Returns: List of well-known asteroids with basic info
-        """
-        try:
-            # List of notable asteroids with their common names/IDs
-            notable_asteroids = [
-                {'id': '433', 'name': 'Eros', 'type': 'Near-Earth Object'},
-                {'id': '1036', 'name': 'Ganymed', 'type': 'Near-Earth Object'},
-                {'id': '1566', 'name': 'Icarus', 'type': 'Potentially Hazardous'},
-                {'id': '1620', 'name': 'Geographos', 'type': 'Near-Earth Object'},
-                {'id': '1862', 'name': 'Apollo', 'type': 'Near-Earth Object'},
-                {'id': '1863', 'name': 'Antinous', 'type': 'Apollo Group'},
-                {'id': '1864', 'name': 'Daedalus', 'type': 'Apollo Group'},
-                {'id': '1865', 'name': 'Cerberus', 'type': 'Apollo Group'},
-                {'id': '1866', 'name': 'Sisyphus', 'type': 'Apollo Group'},
-                {'id': '1980', 'name': 'Tezcatlipoca', 'type': 'Apollo Group'},
-                {'id': '2060', 'name': 'Chiron', 'type': 'Centaur'},
-                {'id': '2062', 'name': 'Aten', 'type': 'Aten Group'},
-                {'id': '2100', 'name': 'Ra-Shalom', 'type': 'Aten Group'},
-                {'id': '2101', 'name': 'Adonis', 'type': 'Apollo Group'},
-                {'id': '2102', 'name': 'Tantalus', 'type': 'Apollo Group'},
-                {'id': '2135', 'name': 'Aristaeus', 'type': 'Apollo Group'},
-                {'id': '2201', 'name': 'Oljato', 'type': 'Apollo Group'},
-                {'id': '2212', 'name': 'Hephaistos', 'type': 'Apollo Group'},
-                {'id': '3122', 'name': 'Florence', 'type': 'Potentially Hazardous'},
-                {'id': '3200', 'name': 'Phaethon', 'type': 'Apollo Group'},
-                {'id': '3554', 'name': 'Amun', 'type': 'Aten Group'},
-                {'id': '4015', 'name': 'Wilson-Harrington', 'type': 'Apollo Group'},
-                {'id': '4179', 'name': 'Toutatis', 'type': 'Apollo Group'},
-                {'id': '4183', 'name': 'Cuno', 'type': 'Apollo Group'},
-                {'id': '4450', 'name': 'Pan', 'type': 'Apollo Group'},
-                {'id': '4660', 'name': 'Nereus', 'type': 'Apollo Group'},
-                {'id': '4769', 'name': 'Castalia', 'type': 'Apollo Group'},
-                {'id': '5143', 'name': 'Itokawa', 'type': 'Apollo Group'},
-                {'id': '6489', 'name': 'Golevka', 'type': 'Apollo Group'},
-                {'id': '25143', 'name': 'Itokawa', 'type': 'Apollo Group'},
-                {'id': '99942', 'name': 'Apophis', 'type': 'Potentially Hazardous'},
-                {'id': '101955', 'name': 'Bennu', 'type': 'Apollo Group'},
-                {'id': '162173', 'name': 'Ryugu', 'type': 'Apollo Group'}
-            ]
-            
-            return jsonify({
-                'success': True,
-                'count': len(notable_asteroids),
-                'asteroids': notable_asteroids,
-                'note': 'This list includes notable Near-Earth Objects, Potentially Hazardous Asteroids, and mission targets'
-            })
-            
-        except Exception as e:
-            logger.error(f"Notable asteroids list failed: {str(e)}")
-            return jsonify({
-                'success': False,
-                'error': f'Notable asteroids list failed: {str(e)}'
-            }), 500
-    
-    @app.route('/api/asteroids/list/search-all', methods=['GET'])
-    def search_all_asteroids():
-        """
-        Search for asteroids without specific query (gets recent discoveries/notable ones)
-        Query parameters: ?limit=50&neo_only=true&pha_only=false
-        Returns: List of asteroids based on filters
-        """
-        try:
-            limit = int(request.args.get('limit', 50))
-            neo_only = request.args.get('neo_only', 'false').lower() == 'true'
-            pha_only = request.args.get('pha_only', 'false').lower() == 'true'
-            
-            # Use JPL's query API to get a broader list
-            search_url = "https://ssd-api.jpl.nasa.gov/sbdb_query.api"
-            params = {
-                'fields': 'spkid,full_name,neo,pha,H,diameter,class',
-                'sb-kind': 'a',  # asteroids only
-                'limit': limit
-            }
-            
-            # Add filters based on parameters
-            if neo_only:
-                params['neo'] = '1'
-            if pha_only:
-                params['pha'] = '1'
-            
-            logger.info(f"Fetching asteroid list with limit: {limit}, NEO only: {neo_only}, PHA only: {pha_only}")
-            
-            import requests
-            response = requests.get(search_url, params=params, timeout=30)
-            response.raise_for_status()
-            data = response.json()
-            
-            if 'data' not in data:
-                return jsonify({
-                    'success': False,
-                    'error': 'No asteroid data available'
-                }), 404
-            
-            results = []
-            for row in data['data']:
-                if len(row) >= 7:  # Ensure we have all expected fields
-                    results.append({
-                        'id': str(row[0]),
-                        'name': row[1],
-                        'neo': row[2] == '1' if row[2] else False,
-                        'pha': row[3] == '1' if row[3] else False,
-                        'absolute_magnitude': float(row[4]) if row[4] else None,
-                        'diameter_km': float(row[5]) if row[5] else None,
-                        'class': row[6] if len(row) > 6 else None
-                    })
-            
-            return jsonify({
-                'success': True,
-                'count': len(results),
-                'filters': {
-                    'limit': limit,
-                    'neo_only': neo_only,
-                    'pha_only': pha_only
-                },
-                'asteroids': results
-            })
-            
-        except Exception as e:
-            logger.error(f"Asteroid list search failed: {str(e)}")
-            return jsonify({
-                'success': False,
-                'error': f'Asteroid list search failed: {str(e)}'
-            }), 500
-    
     return app
 
 # Create the application instance
 app = create_app()
 
 if __name__ == '__main__':
-    # Development server
+    # Get port from environment variable (Railway sets this) or default to 5000
+    port = int(os.environ.get('PORT', 5000))
+    debug_mode = os.environ.get('FLASK_ENV') != 'production'
+    
     print("🚀 Starting Asteroid Impact Modeling API...")
-    print("🌍 Serving on http://localhost:5000")
+    print(f"🌍 Serving on port {port}")
     print("📡 API endpoints available at /api/")
     print("💡 Visit /api/info for full API documentation")
     
     app.run(
         host='0.0.0.0',
-        port=5000,
-        debug=True,
+        port=port,
+        debug=debug_mode,
         threaded=True
     )
