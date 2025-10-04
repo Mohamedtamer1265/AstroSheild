@@ -11,6 +11,8 @@ import {
 import MeteorPage from "./pages/MeteorPage";
 import MeteorInfo from "./pages/MeteorInfo";
 import AsteroidDashboard from "./pages/asteroid";
+import { AccessibilityProvider } from "./contexts/AccessibilityContext";
+import "./styles/accessibility.css";
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
@@ -20,7 +22,7 @@ const router = createBrowserRouter(
         {/* <Route path="*" element={<NotFoundPage />} />*/}
       </Route>
       <Route path="/MeteorPage" element={<MeteorPage></MeteorPage>} />
-      <Route path="/MeteorInfo" element={<MeteorInfo></MeteorInfo>} />
+      <Route path="/meteor-info" element={<MeteorInfo></MeteorInfo>} />
       <Route path="/Game" element={<Game></Game>} />
       <Route
         path="/astroid"
@@ -31,7 +33,11 @@ const router = createBrowserRouter(
 );
 
 const App = () => {
-  return <RouterProvider router={router} />;
+  return (
+    <AccessibilityProvider>
+      <RouterProvider router={router} />
+    </AccessibilityProvider>
+  );
 };
 
 export default App;
