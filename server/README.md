@@ -1,7 +1,7 @@
 # 🌍☄️ Asteroid Impact Modeling API
-# NASA Space Apps 2024
+# NASA Space Apps 2025
 
-![NASA Space Apps](https://img.shields.io/badge/NASA-Space%20Apps%202024-blue)
+![NASA Space Apps](https://img.shields.io/badge/NASA-Space%20Apps%202025-blue)
 ![Python](https://img.shields.io/badge/Python-3.8+-green)
 ![Flask](https://img.shields.io/badge/Flask-2.3+-red)
 
@@ -238,4 +238,4 @@ For issues and questions:
 
 ---
 
-**🌍☄️ Protecting Earth through science and technology - NASA Space Apps 2024**
+**🌍☄️ Protecting Earth through science and technology - NASA Space Apps 2025**
