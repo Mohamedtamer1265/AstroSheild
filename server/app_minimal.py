@@ -18,21 +18,20 @@ def create_minimal_app():
     """Create a minimal Flask application for Railway deployment."""
     app = Flask(__name__)
     
-    # Enable CORS for React frontend (development and production)
-    allowed_origins = [
-        "http://localhost:3000", 
-        "http://localhost:5173",
-        "http://localhost:3001"
-    ]
-    
-    # Add production origins if deployed
-    if os.environ.get('RAILWAY_ENVIRONMENT'):
-        allowed_origins.extend([
-            "https://your-frontend-domain.vercel.app",
-            "https://your-frontend-domain.railway.app"
-        ])
-    
-    CORS(app, origins=allowed_origins)
+    # Enable CORS for all origins in production (Railway deployment)
+    if os.environ.get('RAILWAY_ENVIRONMENT') or os.environ.get('PORT'):
+        # In production, allow all origins for now
+        CORS(app, origins="*")
+        logger.info("🌐 CORS enabled for all origins (production mode)")
+    else:
+        # Development mode - specific origins
+        allowed_origins = [
+            "http://localhost:3000", 
+            "http://localhost:5173",
+            "http://localhost:3001"
+        ]
+        CORS(app, origins=allowed_origins)
+        logger.info(f"🌐 CORS enabled for specific origins: {allowed_origins}")
     
     # Configuration
     app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'nasa-space-apps-2024')
@@ -131,12 +130,20 @@ def create_minimal_app():
         return jsonify({
             'message': 'AstroShield API - Minimal Mode',
             'status': 'running',
+            'version': '1.0.0-minimal',
+            'timestamp': datetime.utcnow().isoformat(),
             'endpoints': {
                 'health': '/api/health',
                 'info': '/api/info',
                 'status': '/api/status'
             }
         })
+    
+    # Test route to verify everything works
+    @app.route('/test')
+    def test():
+        """Simple test endpoint."""
+        return "AstroShield API is working!"
     
     return app
 
