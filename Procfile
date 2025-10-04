@@ -1,1 +1,1 @@
-web: gunicorn --bind 0.0.0.0:$PORT wsgi:application
+web: python run_direct.py

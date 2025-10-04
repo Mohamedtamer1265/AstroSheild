@@ -5,7 +5,8 @@ NASA Space Apps 2024 - Flask Backend
 Main Flask application providing REST API endpoints for asteroid impact modeling.
 Integrates with React frontend for comprehensive impact analysis and visualization.
 """
-
+# Add this import at the top with other imports
+from controllers.asteroid_api import asteroid_bp
 from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS
 import logging
@@ -53,6 +54,7 @@ def create_app():
     app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'nasa-space-apps-2024')
     app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
     
+
     # Initialize managers
     nasa_api_manager = NASAAPIManager()
     viz_manager = VisualizationManager(nasa_api_manager)
@@ -64,7 +66,7 @@ def create_app():
     
     # Register blueprints
     app.register_blueprint(tsunami_bp)
-    
+    app.register_blueprint(asteroid_bp, url_prefix='/api')
     # Error handlers
     @app.errorhandler(400)
     def bad_request(error):
