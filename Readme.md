@@ -1,241 +1,207 @@
-# 🌍☄️ Asteroid Impact Modeling API
-# NASA Space Apps 2024
-
-![NASA Space Apps](https://img.shields.io/badge/NASA-Space%20Apps%202024-blue)
-![Python](https://img.shields.io/badge/Python-3.8+-green)
-![Flask](https://img.shields.io/badge/Flask-2.3+-red)
-
-Flask backend API for asteroid impact modeling and analysis. Provides comprehensive physics-based calculations, visualization data, and scenario management for React frontend integration.
-
-## 🚀 Quick Start
-
-### Installation
-
-1. **Install Dependencies**
-```bash
-cd backend
-pip install -r requirements.txt
-```
-
-2. **Run the Server**
-```bash
-python run.py
-```
-
-3. **Test the API**
-```bash
-curl http://localhost:5000/api/health
-```
-
-## 📡 API Endpoints
-
-### Core Information
-- `GET /api/health` - Health check
-- `GET /api/info` - API documentation and capabilities
-
-### Impact Analysis
-- `POST /api/impact/analyze` - Comprehensive impact analysis
-- `POST /api/impact/custom` - Create custom impact scenario
-- `POST /api/impact/parameter-study` - Parameter sensitivity analysis
-
-### Scenario Management
-- `GET /api/scenarios` - List all available scenarios
-- `GET /api/scenarios/<name>` - Get scenario details
-- `POST /api/scenarios/<name>/run` - Run scenario analysis
-- `POST /api/scenarios/compare` - Compare multiple scenarios
-
-### Visualizations
-- `POST /api/visualization/shake-map` - Generate shake map data
-- `POST /api/visualization/impact-chart` - Generate chart data
-
-## 📊 API Usage Examples
-
-### Analyze Custom Impact
-```json
-POST /api/impact/analyze
-{
-    "diameter_m": 200,
-    "velocity_km_s": 20,
-    "impact_lat": 40.7128,
-    "impact_lon": -74.0060,
-    "location_name": "New York City"
-}
-```
-
-### Run Pre-defined Scenario
-```json
-POST /api/scenarios/chelyabinsk_2013/run
-{
-    "custom_location": {
-        "lat": 51.5074,
-        "lon": -0.1278,
-        "name": "London"
-    }
-}
-```
-
-### Compare Scenarios
-```json
-POST /api/scenarios/compare
-{
-    "scenario_names": ["chelyabinsk_2013", "city_killer", "regional_disaster"]
-}
-```
-
-### Parameter Study
-```json
-POST /api/impact/parameter-study
-{
-    "base_diameter_m": 100,
-    "impact_lat": 30.0444,
-    "impact_lon": 31.2357,
-    "parameter": "diameter",
-    "values": [50, 100, 200, 500, 1000]
-}
-```
-
-## 🔬 Physics Models
-
-### Implemented Features
-- **Energy Calculations**: Kinetic energy and TNT equivalents
-- **Crater Formation**: Schmidt-Housen scaling laws
-- **Seismic Analysis**: Kanamori energy-magnitude relationships with live USGS earthquake data
-- **Air Blast Effects**: Overpressure zones and thermal radiation
-- **Casualty Estimation**: Population impact assessment
-- **Visualization Data**: Interactive maps and charts
-- **Live API Integration**: USGS earthquake data, Open-Elevation API
-
-### Available Scenarios
-- `chelyabinsk_2013` - 2013 Chelyabinsk Event (Historical)
-- `tunguska_1908` - 1908 Tunguska Event (Historical)
-- `apophis_potential` - Apophis 2029 potential impact
-- `city_killer` - NASA city-killer threshold
-- `regional_disaster` - Regional-scale impact
-- `chicxulub_scale` - Extinction-level event
-
-## 🌐 React Frontend Integration
-
-### CORS Configuration
-- Enabled for `http://localhost:3000` (Create React App)
-- Enabled for `http://localhost:5173` (Vite)
-- JSON responses with proper error handling
-
-### Response Format
-```json
-{
-    "success": true,
-    "data": {
-        "analysis": { ... },
-        "visualizations": { ... },
-        "summary": { ... }
-    }
-}
-```
-
-### Error Responses
-```json
-{
-    "success": false,
-    "error": "Error type",
-    "message": "Detailed error message",
-    "details": "Additional information"
-}
-```
-
-## 📁 Project Structure
-
-```
-backend/
-├── app.py                 # Main Flask application
-├── run.py                 # Development server runner
-├── requirements.txt       # Python dependencies
-├── models/
-│   ├── asteroid_impact.py # Physics calculations
-│   └── scenarios.py       # Pre-defined scenarios
-├── controllers/
-│   ├── impact_controller.py    # Impact analysis endpoints
-│   └── scenario_controller.py  # Scenario management endpoints
-└── utils/
-    ├── visualization.py   # Chart and map data generation
-    └── nasa_apis.py      # External API integrations
-```
-
-## 🛠️ Development
-
-### Adding New Scenarios
-1. Edit `models/scenarios.py`
-2. Add scenario to `get_scenarios()` method
-3. Include all required parameters
-
-### Extending Physics Models
-1. Modify `models/asteroid_impact.py`
-2. Add new calculation methods
-3. Update `get_comprehensive_analysis()`
-
-### API Extensions
-1. Add new endpoints to controllers
-2. Register routes in `app.py`
-3. Update API documentation
-
-## 🔧 Configuration
-
-### Environment Variables
-- `SECRET_KEY` - Flask secret key (default: auto-generated)
-- `FLASK_ENV` - Environment mode (development/production)
-- `PORT` - Server port (default: 5000)
-
-### API Limits
-- Max request size: 16MB
-- Request timeout: 30 seconds
-- CORS origins configurable in `app.py`
-
-## 📚 Scientific References & Data Sources
-
-- Schmidt & Housen crater scaling laws
-- Kanamori seismic energy-magnitude relations
-- Nuclear weapons effects for air blast modeling
-- NASA planetary defense guidelines
-- **USGS Earthquake API**: Live earthquake data for seismic comparisons
-- **Open-Elevation API**: Terrain elevation data for impact locations
-
-## 🚀 Production Deployment
-
-### Using Gunicorn
-```bash
-pip install gunicorn
-gunicorn -w 4 -b 0.0.0.0:5000 app:app
-```
-
-### Using Waitress (Windows)
-```bash
-pip install waitress
-waitress-serve --host=0.0.0.0 --port=5000 app:app
-```
-
-## 🔍 Testing
-
-### Manual Testing
-```bash
-# Health check
-curl http://localhost:5000/api/health
-
-# Get scenarios
-curl http://localhost:5000/api/scenarios
-
-# Test impact analysis
-curl -X POST http://localhost:5000/api/impact/analyze \
-  -H "Content-Type: application/json" \
-  -d '{"diameter_m":100,"velocity_km_s":20,"impact_lat":40.7,"impact_lon":-74.0}'
-```
-
-## 📞 Support
-
-For issues and questions:
-1. Check API documentation: `/api/info`
-2. Review error responses for details
-3. Ensure all required parameters are provided
-4. Validate coordinate ranges (-90 to 90 lat, -180 to 180 lon)
+# AstroShield
+## Advanced Asteroid Impact Simulation and Planetary Defense System
+### NASA Space Apps Challenge 2025 - Project Documentation
 
 ---
 
-**🌍☄️ Protecting Earth through science and technology - NASA Space Apps 2024**
+## 1. HIGH-LEVEL PROJECT SUMMARY
+
+### What We Developed:
+AstroShield is a comprehensive asteroid impact simulation system combining real NASA data with advanced orbital mechanics. It features an interactive web application with world mapping and a sophisticated backend API powered by NASA's JPL Small-Body Database and other sources.
+
+![AstroShield Overview](Picture1.png)
+
+### How It Addresses the Challenge:
+- **Real-Time Threat Assessment** using NASA's JPL Small-Body Database and NASA NeoWs Database
+- **Advanced Impact Modeling** with proper Keplerian orbital mechanics
+- **Interactive Visualization** with Leaflet maps for impact simulation
+- **Comprehensive Risk Analysis** including damage radii and crater formation
+- **Educational Outreach** on asteroid deflection methods through interactive gaming (Wiiry Boy character)
+
+### Why It's Important:
+Asteroid impacts pose genuine threats to Earth. AstroShield provides early warning capabilities, realistic impact assessment, public education tools, and a research platform for planetary defense studies.
+
+---
+
+## 2. PROJECT DETAILS
+
+### Core Functionality:
+✓ **Asteroid Data Integration** - Real-time NASA JPL Small-Body Database access and NASA NeoWs  
+✓ **Trajectory Prediction** - Keplerian orbital mechanics implementation  
+✓ **Impact Simulation** - Realistic scenarios with coordinates and velocities  
+✓ **Risk Assessment** - Crater formation and damage analysis  
+✓ **Interactive Mapping** - World map interface for impact visualization  
+✓ **Educational Gaming** - Interactive learning through decision scenarios  
+✓ **Expert mode and Simple View** for Asteroid data and analytics  
+✓ **Color-blind friendly version** – Adjusts the colors of the website to allow inclusion of color blind people  
+
+![Accessibility Features](Picture2.png)
+
+*As you can see, the colors of the website change to accommodate people who are color blind by changing the colors of the UI.*
+
+### Dual View System
+
+![Simple vs Scientific View](Picture3.png)
+
+When assessing the asteroids, the website offers both a **simple view** and a **scientific view** (with the asteroid ID on top) to help both scientists and enthusiasts access the information in a way that fits them.
+
+### Asteroid List Interface
+
+![Asteroid List Overview](Picture4.png)
+
+The website displays the asteroids in a list to allow users to have an overview of the NEOs and clicking on them navigates you to the page which allows you to calculate the course of the asteroid, and the possible impact zone (if applicable).
+
+### Interactive Educational Gaming
+
+![Wiiry Educational Game](Picture5.png)
+
+The game featuring our mascot **Wiiry** allows the user to learn about the methods of asteroid deflection by playing an interactive game.
+
+### Technical Architecture:
+- **Frontend**: React.js + Leaflet mapping + Tailwind CSS
+- **Backend**: Flask API + Python scientific libraries
+- **Database**: Direct NASA JPL API integration
+- **Physics**: Custom Keplerian orbital mechanics engine
+- **Modeling**: Scientific algorithms for impact assessment
+
+### Benefits:
+- **Scientific**: Accurate predictions using real NASA data
+- **Educational**: Interactive learning about asteroid threats
+- **Practical**: Early warning and disaster preparedness tools
+
+### Development Tools:
+- **Languages**: JavaScript/React, Python, HTML/CSS
+- **Frameworks**: React.js, Flask, Leaflet, NumPy, Tailwind CSS
+- **APIs**: NASA JPL Small-Body Database, OpenStreetMap
+- **Environment**: VS Code, Node.js, Python 3.11, Git
+
+---
+
+## 3. NASA DATA USAGE
+
+![NASA Data Integration](Picture6.png)
+
+### Primary NASA Data Sources:
+
+#### • NASA JPL Small-Body Database (SBDB)
+- Physical properties (diameter, magnitude, albedo)
+- Classification data (NEO status, PHA designation)
+- Search functionality for asteroid discovery
+- Real-time catalog access
+
+#### • NASA NeoWs
+- Querying near earth asteroids in a certain period
+- Get asteroids by ID to be used by JPL
+
+### Data Implementation:
+- Direct API integration for live data access
+- Real physics calculations using orbital elements
+- Scientific accuracy through authentic observational data
+- Educational value using genuine NASA information
+
+### Data Processing:
+- Convert orbital elements to 3D position vectors
+- Calculate positions using Kepler's equation
+- Predict trajectories with gravitational mechanics
+- Assess close approach scenarios with Earth
+
+---
+
+## 4. SPACE AGENCY PARTNER & OTHER DATA SOURCES
+
+![Additional Data Sources](Picture7.png)
+
+- **OpenStreetMap** (Base mapping)
+- **Collins et al. Impact Scaling Laws** (Crater size calculations)
+- **USGS Earthquake Data** (Seismic modeling reference for comparison)
+
+---
+
+## 5. USE OF ARTIFICIAL INTELLIGENCE (AI)
+
+### AI Tools Utilized:
+
+#### • GitHub Copilot
+- Code completion and development assistance
+- Orbital mechanics calculation support
+- API integration guidance
+- Frontend component development
+- Documentation generation assistance
+
+### AI Applications:
+✓ **Code Generation**: Boilerplate code for APIs and React components  
+✓ **Algorithm Implementation**: Complex mathematical functions  
+✓ **Error Debugging**: Integration issue resolution  
+✓ **Documentation**: Structure and formatting assistance  
+
+### Responsible AI Usage:
+- All AI-generated code thoroughly reviewed and tested
+- Scientific calculations validated against astronomical principles
+- NASA data integration manually verified for accuracy
+- Human oversight maintained for all critical decisions
+- Transparent documentation of AI assistance
+
+---
+
+## 6. TECHNICAL IMPLEMENTATION HIGHLIGHTS
+
+### Advanced Orbital Mechanics Engine
+Our system implements sophisticated Keplerian orbital mechanics for accurate asteroid trajectory prediction:
+
+```python
+# Enhanced orbital mechanics with variable time steps
+IMPACT_THRESHOLD_KM = 100000  # 100k km threshold
+TIME_STEP_HOURS = 6  # 6-hour intervals for accuracy
+FINE_TIME_STEP_HOURS = 1  # 1-hour intervals near close approach
+```
+
+### Real-Time Impact Assessment
+- Variable time-step algorithms for computational efficiency
+- Enhanced crater diameter calculations
+- Realistic damage radius modeling
+- Physics-based trajectory analysis
+
+### Interactive User Interface
+- Responsive design for all devices
+- Accessibility features for color-blind users
+- Simple and scientific view modes
+- Real-time data visualization
+
+---
+
+## 7. PROJECT IMPACT & FUTURE DEVELOPMENT
+
+### Educational Impact
+AstroShield serves as a powerful educational tool, making complex astronomical concepts accessible through:
+- Interactive gaming with the Wiiry character
+- Dual-mode interfaces for different user levels
+- Real-time NASA data integration
+- Hands-on learning about planetary defense
+
+### Scientific Contributions
+- Advanced orbital mechanics implementation
+- Real-time threat assessment capabilities
+- Accurate impact modeling using authentic data
+- Research platform for planetary defense studies
+
+### Future Enhancements
+- Machine learning for improved prediction accuracy
+- Extended database integration (ESA, JAXA)
+- Advanced visualization features
+- Mobile application development
+- Real-time alert system integration
+
+---
+
+## 8. CONCLUSION
+
+AstroShield represents a significant advancement in asteroid impact simulation and planetary defense education. By combining cutting-edge technology with real NASA data, we've created a comprehensive platform that serves both scientific and educational communities.
+
+Our system demonstrates the power of integrating authentic space agency data with modern web technologies to create tools that are both scientifically accurate and publicly accessible. The project showcases responsible AI usage, accessibility considerations, and the importance of making space science available to everyone.
+
+Through AstroShield, we're not just simulating asteroid impacts – we're building awareness, fostering education, and contributing to humanity's collective effort to protect our planet from cosmic threats.
+
+---
+
+*NASA Space Apps Challenge 2025 - AstroShield Team*  
+*Protecting Earth Through Science, Technology, and Education*
