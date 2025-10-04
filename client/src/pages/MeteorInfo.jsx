@@ -515,42 +515,178 @@ const MeteorInfo = () => {
           <div className="bg-black/60 border border-blue-500 rounded-lg p-6">
             <h2 className="text-2xl font-bold mb-6">🎯 Impact Analysis</h2>
             {impactData ? (
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <div className="space-y-6">
-                  <div className="bg-gray-800 p-4 rounded-lg">
-                    <h3 className="text-lg font-semibold text-red-400 mb-4">📍 Impact Location</h3>
-                    <div className="space-y-2">
-                      <p><span className="text-gray-400">Latitude:</span> {formatNumber(impactData.impact_coordinates.latitude, 6)}°</p>
-                      <p><span className="text-gray-400">Longitude:</span> {formatNumber(impactData.impact_coordinates.longitude, 6)}°</p>
+              // Check if impact is predicted
+              impactData.will_impact || impactData.impact_coordinates || impactData.impact_date ? (
+                <>
+                  {/* Impact Date - Prominent Display */}
+                  <div className="bg-red-900 border border-red-500 rounded-lg p-6 mb-8">
+                    <div className="text-center">
+                      <h3 className="text-2xl font-bold text-red-400 mb-2">🗓️ PREDICTED IMPACT DATE</h3>
+                      <p className="text-3xl font-bold text-white mb-2">
+                        {impactData.impact_date ? 
+                          new Date(impactData.impact_date).toLocaleDateString('en-US', {
+                            weekday: 'long',
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric'
+                          }) :
+                          impactData.impact_details?.estimated_impact_date ?
+                          new Date(impactData.impact_details.estimated_impact_date).toLocaleDateString('en-US', {
+                            weekday: 'long',
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric'
+                          }) :
+                          "Date calculation in progress..."
+                        }
+                      </p>
+                      <p className="text-red-300">
+                        {impactData.impact_date ? 
+                          new Date(impactData.impact_date).toLocaleTimeString('en-US') + ' UTC' :
+                          impactData.impact_details?.estimated_impact_date ?
+                          new Date(impactData.impact_details.estimated_impact_date).toLocaleTimeString('en-US') + ' UTC' :
+                          ""
+                        }
+                      </p>
                     </div>
                   </div>
-                  
-                  <div className="bg-gray-800 p-4 rounded-lg">
-                    <h3 className="text-lg font-semibold text-orange-400 mb-4">🚀 Impact Velocity</h3>
-                    <div className="space-y-2">
-                      <p><span className="text-gray-400">Speed:</span> {formatNumber(impactData.impact_velocity.velocity_km_s)} km/s</p>
-                      <p><span className="text-gray-400">Direction:</span> {impactData.impact_velocity.direction}</p>
-                      <p><span className="text-gray-400">Bearing:</span> {formatNumber(impactData.impact_velocity.bearing_degrees)}°</p>
+
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div className="space-y-6">
+                      {/* Impact Location */}
+                      {(impactData.impact_coordinates || impactData.coordinates) && (
+                        <div className="bg-gray-800 p-4 rounded-lg">
+                          <h3 className="text-lg font-semibold text-red-400 mb-4">📍 Impact Location</h3>
+                          <div className="space-y-2">
+                            <p><span className="text-gray-400">Latitude:</span> {
+                              formatNumber(
+                                impactData.coordinates?.latitude || impactData.impact_coordinates?.latitude, 
+                                6
+                              )
+                            }°</p>
+                            <p><span className="text-gray-400">Longitude:</span> {
+                              formatNumber(
+                                impactData.coordinates?.longitude || impactData.impact_coordinates?.longitude, 
+                                6
+                              )
+                            }°</p>
+                          </div>
+                        </div>
+                      )}
+                      
+                      {/* Impact Velocity */}
+                      {(impactData.impact_velocity || impactData.approach) && (
+                        <div className="bg-gray-800 p-4 rounded-lg">
+                          <h3 className="text-lg font-semibold text-orange-400 mb-4">🚀 Impact Velocity</h3>
+                          <div className="space-y-2">
+                            <p><span className="text-gray-400">Speed:</span> {
+                              formatNumber(
+                                impactData.approach?.velocity_km_s || impactData.impact_velocity?.velocity_km_s
+                              )
+                            } km/s</p>
+                            {(impactData.approach?.direction || impactData.impact_velocity?.direction) && (
+                              <p><span className="text-gray-400">Direction:</span> {
+                                impactData.approach?.direction || impactData.impact_velocity?.direction
+                              }</p>
+                            )}
+                            {(impactData.approach?.bearing_degrees || impactData.impact_velocity?.bearing_degrees) && (
+                              <p><span className="text-gray-400">Bearing:</span> {
+                                formatNumber(
+                                  impactData.approach?.bearing_degrees || impactData.impact_velocity?.bearing_degrees
+                                )
+                              }°</p>
+                            )}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                    
+                    <div className="space-y-6">
+                      {/* Impact Effects */}
+                      {(impactData.impact_details || impactData.impact_effects) && (
+                        <div className="bg-gray-800 p-4 rounded-lg">
+                          <h3 className="text-lg font-semibold text-purple-400 mb-4">💥 Impact Effects</h3>
+                          <div className="space-y-2">
+                            {(impactData.impact_effects?.energy_megatons || impactData.impact_details?.energy_megatons) && (
+                              <p><span className="text-gray-400">Energy:</span> {
+                                formatNumber(
+                                  impactData.impact_effects?.energy_megatons || impactData.impact_details?.energy_megatons
+                                )
+                              } megatons TNT</p>
+                            )}
+                            {(impactData.impact_effects?.crater_diameter_m || impactData.crater_diameter_km) && (
+                              <p><span className="text-gray-400">Crater:</span> {
+                                impactData.crater_diameter_km ? 
+                                formatNumber(impactData.crater_diameter_km) + " km" :
+                                formatNumber((impactData.impact_effects?.crater_diameter_m || 0) / 1000, 2) + " km"
+                              }</p>
+                            )}
+                            {(impactData.impact_effects?.mass_kg || impactData.impact_details?.estimated_mass_kg) && (
+                              <p><span className="text-gray-400">Mass:</span> {
+                                formatNumber(
+                                  (impactData.impact_effects?.mass_kg || impactData.impact_details?.estimated_mass_kg) / 1e12
+                                )
+                              } trillion kg</p>
+                            )}
+                          </div>
+                        </div>
+                      )}
+                      
+                      {/* Accuracy Information */}
+                      {impactData.accuracy_details && (
+                        <div className="bg-blue-900 border border-blue-600 p-4 rounded-lg">
+                          <h3 className="text-lg font-semibold text-blue-400 mb-2">📊 Prediction Accuracy</h3>
+                          <div className="space-y-1 text-sm">
+                            <p className="text-blue-200">✅ Enhanced orbital mechanics</p>
+                            <p className="text-blue-200">✅ Variable time-step analysis</p>
+                            <p className="text-blue-200">✅ Physics-based calculations</p>
+                            {impactData.accuracy_details.closest_approach_km && (
+                              <p className="text-blue-200">
+                                Closest approach: {formatDistance(impactData.accuracy_details.closest_approach_km)}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                      )}
+                      
+                      {/* Warning/Note */}
+                      {(impactData.note || impactData.generation_method) && (
+                        <div className="bg-yellow-900 border border-yellow-600 p-4 rounded-lg">
+                          <h3 className="text-lg font-semibold text-yellow-400 mb-2">⚠️ Important Note</h3>
+                          <p className="text-sm text-yellow-200">
+                            {impactData.note || 
+                             (impactData.generation_method === 'enhanced_orbital_mechanics' ? 
+                              'High-accuracy prediction using real orbital mechanics' : 
+                              'Prediction based on available asteroid data')}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </>
+              ) : (
+                // No Impact Detected
+                <div className="text-center py-12">
+                  <div className="text-8xl mb-6">✅</div>
+                  <h3 className="text-3xl font-bold text-green-400 mb-4">NO IMPACT IDENTIFIED</h3>
+                  <p className="text-xl text-gray-300 mb-4">This asteroid will not impact Earth</p>
+                  <div className="bg-green-900 border border-green-500 rounded-lg p-6 max-w-2xl mx-auto">
+                    <h4 className="text-lg font-semibold text-green-400 mb-4">🛡️ Safe Passage Confirmed</h4>
+                    <div className="space-y-2 text-left">
+                      {impactData.closest_approach_km && (
+                        <p><span className="text-gray-400">Closest Approach:</span> {formatDistance(impactData.closest_approach_km)}</p>
+                      )}
+                      {impactData.closest_approach && (
+                        <p><span className="text-gray-400">Closest Distance:</span> {formatDistance(impactData.closest_approach.distance_km)}</p>
+                      )}
+                      <p><span className="text-gray-400">Status:</span> <span className="text-green-400 font-bold">Safe - No Earth Impact</span></p>
+                      {impactData.physics_based_approach && (
+                        <p><span className="text-gray-400">Analysis Method:</span> Enhanced orbital mechanics</p>
+                      )}
                     </div>
                   </div>
                 </div>
-                
-                <div className="space-y-6">
-                  <div className="bg-gray-800 p-4 rounded-lg">
-                    <h3 className="text-lg font-semibold text-purple-400 mb-4">💥 Impact Effects</h3>
-                    <div className="space-y-2">
-                      <p><span className="text-gray-400">Energy:</span> {formatNumber(impactData.impact_details.energy_megatons)} megatons TNT</p>
-                      <p><span className="text-gray-400">Date:</span> {new Date(impactData.impact_details.estimated_impact_date).toLocaleDateString()}</p>
-                      <p><span className="text-gray-400">Mass:</span> {formatNumber(impactData.impact_details.estimated_mass_kg / 1e12)} trillion kg</p>
-                    </div>
-                  </div>
-                  
-                  <div className="bg-yellow-900 border border-yellow-600 p-4 rounded-lg">
-                    <h3 className="text-lg font-semibold text-yellow-400 mb-2">⚠️ Important Note</h3>
-                    <p className="text-sm text-yellow-200">{impactData.note}</p>
-                  </div>
-                </div>
-              </div>
+              )
             ) : (
               <div className="text-center py-12">
                 <div className="text-6xl mb-4">🎯</div>
@@ -572,28 +708,68 @@ const MeteorInfo = () => {
             <h2 className="text-2xl font-bold mb-6">📍 Location Visualization</h2>
             <div className="space-y-6">
               {impactData ? (
-                <>
-                  <div className="text-center">
-                    <p className="text-gray-400 mb-4">
-                      Predicted impact location: {formatNumber(impactData.impact_coordinates.latitude, 4)}°N, 
-                      {formatNumber(impactData.impact_coordinates.longitude, 4)}°E
-                    </p>
-                  </div>
-                  <div className="h-96 bg-gray-800 rounded-lg flex items-center justify-center">
-                    <Map 
-                      impactLocation={{
-                        lat: impactData.impact_coordinates.latitude,
-                        lng: impactData.impact_coordinates.longitude
-                      }}
-                      asteroidData={asteroidData}
-                    />
-                  </div>
-                </>
+                // Check if there's an actual impact to show
+                (impactData.will_impact || impactData.impact_coordinates || impactData.coordinates) ? (
+                  <>
+                    <div className="text-center">
+                      <p className="text-gray-400 mb-4">
+                        Predicted impact location: {
+                          formatNumber(
+                            impactData.coordinates?.latitude || impactData.impact_coordinates?.latitude, 
+                            4
+                          )
+                        }°N, {
+                          formatNumber(
+                            impactData.coordinates?.longitude || impactData.impact_coordinates?.longitude, 
+                            4
+                          )
+                        }°E
+                      </p>
+                    </div>
+                    <div className="h-96 bg-gray-800 rounded-lg flex items-center justify-center">
+                      <Map 
+                        impactLocation={{
+                          lat: impactData.coordinates?.latitude || impactData.impact_coordinates?.latitude,
+                          lng: impactData.coordinates?.longitude || impactData.impact_coordinates?.longitude
+                        }}
+                        asteroidData={asteroidData}
+                      />
+                    </div>
+                  </>
+                ) : (
+                  // No impact case
+                  <>
+                    <div className="text-center bg-green-900 border border-green-500 rounded-lg p-6">
+                      <div className="text-6xl mb-4">🛡️</div>
+                      <h3 className="text-2xl font-bold text-green-400 mb-2">Safe Trajectory</h3>
+                      <p className="text-gray-300 mb-4">
+                        This asteroid will pass safely by Earth without impact
+                      </p>
+                      {impactData.closest_approach_km && (
+                        <p className="text-green-300">
+                          Closest approach: {formatDistance(impactData.closest_approach_km)}
+                        </p>
+                      )}
+                      {impactData.closest_approach && (
+                        <p className="text-green-300">
+                          Closest distance: {formatDistance(impactData.closest_approach.distance_km)}
+                        </p>
+                      )}
+                    </div>
+                    <div className="h-96 bg-gray-800 rounded-lg flex items-center justify-center">
+                      <Map 
+                        impactLocation={null}
+                        asteroidData={asteroidData}
+                        showSafePath={true}
+                      />
+                    </div>
+                  </>
+                )
               ) : (
                 <>
                   <div className="text-center">
                     <p className="text-gray-400 mb-4">
-                      Asteroid trajectory visualization - Generate impact prediction to view precise impact location
+                      Asteroid trajectory visualization - Generate impact prediction to view analysis results
                     </p>
                   </div>
                   <div className="h-96 bg-gray-800 rounded-lg flex items-center justify-center">

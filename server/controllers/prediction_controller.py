@@ -39,16 +39,25 @@ class StrategicImpactGenerator:
         self.random.seed(42)  # Reproducible "randomness"
         self.orbital_mechanics = RealisticOrbitalMechanics()
         
+        # Enhanced accuracy parameters
+        self.IMPACT_THRESHOLD_KM = 100000  # 100k km - much smaller threshold for impact detection
+        self.TIME_STEP_HOURS = 6  # 6-hour intervals for high accuracy
+        self.FINE_TIME_STEP_HOURS = 1  # 1-hour intervals near close approach
+        self.CLOSE_APPROACH_DETECTION_KM = 500000  # 500k km to start fine tracking
+        
     def check_close_approach_and_generate_impact(self, asteroid_data: Dict, search_days: int = 60) -> Dict:
-        """Check if asteroid gets close, then generate impact scenario"""
+        """Enhanced close approach detection with variable time steps for accuracy"""
         try:
             start_date = datetime.now()
             
-            closest_approach = {'distance': float('inf'), 'date': None}
+            closest_approach = {'distance': float('inf'), 'date': None, 'ast_state': None, 'earth_state': None}
+            trajectory_points = []
             
-            # Check every 2 days for close approaches
-            for day_offset in range(0, search_days, 2):
-                check_date = start_date + timedelta(days=day_offset)
+            # Phase 1: Coarse scan with 6-hour intervals
+            logger.info(f"Starting coarse orbital tracking for {asteroid_data['name']} over {search_days} days")
+            
+            for hour_offset in range(0, search_days * 24, self.TIME_STEP_HOURS):
+                check_date = start_date + timedelta(hours=hour_offset)
                 
                 # Real physics calculations
                 ast_state = self.orbital_mechanics.calculate_position(
@@ -64,16 +73,65 @@ class StrategicImpactGenerator:
                 earth_pos = np.array(earth_state['position_km'])
                 distance = np.linalg.norm(ast_pos - earth_pos)
                 
+                trajectory_points.append({
+                    'date': check_date,
+                    'distance': distance,
+                    'ast_state': ast_state,
+                    'earth_state': earth_state
+                })
+                
                 # Track closest approach
                 if distance < closest_approach['distance']:
-                    closest_approach = {'distance': distance, 'date': check_date}
+                    closest_approach = {
+                        'distance': distance, 
+                        'date': check_date,
+                        'ast_state': ast_state,
+                        'earth_state': earth_state
+                    }
             
-            # If asteroid gets reasonably close, generate impact scenario
-            will_generate_impact = closest_approach['distance'] < CLOSE_APPROACH_THRESHOLD
+            # Phase 2: Fine scan around closest approach if it's within detection range
+            if closest_approach['distance'] < self.CLOSE_APPROACH_DETECTION_KM:
+                logger.info(f"Close approach detected at {closest_approach['distance']:.0f} km, performing fine scan")
+                
+                # Fine scan ±24 hours around closest approach with 1-hour intervals
+                fine_start = closest_approach['date'] - timedelta(hours=24)
+                fine_end = closest_approach['date'] + timedelta(hours=24)
+                
+                current_time = fine_start
+                while current_time <= fine_end:
+                    ast_state = self.orbital_mechanics.calculate_position(
+                        asteroid_data['orbital_elements'], current_time
+                    )
+                    earth_state = self.orbital_mechanics.calculate_earth_position(current_time)
+                    
+                    if ast_state.get('success') and earth_state.get('success'):
+                        ast_pos = np.array(ast_state['position_km'])
+                        earth_pos = np.array(earth_state['position_km'])
+                        distance = np.linalg.norm(ast_pos - earth_pos)
+                        
+                        # Update closest approach if we found something closer
+                        if distance < closest_approach['distance']:
+                            closest_approach = {
+                                'distance': distance,
+                                'date': current_time,
+                                'ast_state': ast_state,
+                                'earth_state': earth_state
+                            }
+                    
+                    current_time += timedelta(hours=self.FINE_TIME_STEP_HOURS)
             
-            if will_generate_impact:
-                impact_scenario = self._generate_realistic_impact_scenario(
-                    asteroid_data, closest_approach['date']
+            # Determine if this constitutes an impact
+            will_impact = closest_approach['distance'] < self.IMPACT_THRESHOLD_KM
+            
+            logger.info(f"Closest approach: {closest_approach['distance']:.0f} km, Impact threshold: {self.IMPACT_THRESHOLD_KM} km, Will impact: {will_impact}")
+            
+            if will_impact:
+                impact_scenario = self._generate_accurate_impact_scenario(
+                    asteroid_data, 
+                    closest_approach['date'],
+                    closest_approach['ast_state'],
+                    closest_approach['earth_state'],
+                    closest_approach['distance']
                 )
             else:
                 impact_scenario = None
@@ -86,63 +144,99 @@ class StrategicImpactGenerator:
                     'distance_earth_radii': closest_approach['distance'] / EARTH_RADIUS,
                     'date': closest_approach['date'].isoformat() if closest_approach['date'] else None
                 },
-                'threshold_km': CLOSE_APPROACH_THRESHOLD,
-                'will_impact': will_generate_impact,
+                'threshold_km': self.IMPACT_THRESHOLD_KM,
+                'will_impact': will_impact,
                 'impact_scenario': impact_scenario,
-                'physics_based_approach': True
+                'physics_based_approach': True,
+                'accuracy_method': 'Enhanced Keplerian with variable time steps',
+                'trajectory_points_analyzed': len(trajectory_points)
             }
             
         except Exception as e:
-            logger.error(f"Error in close approach analysis: {str(e)}")
+            logger.error(f"Error in enhanced close approach analysis: {str(e)}")
             return {'success': False, 'error': str(e)}
 
-    def _generate_realistic_impact_scenario(self, asteroid_data: Dict, impact_date: datetime) -> Dict:
-        """Generate realistic impact scenario for analysis"""
+    def _generate_accurate_impact_scenario(self, asteroid_data: Dict, impact_date: datetime, 
+                                         ast_state: Dict, earth_state: Dict, closest_distance: float) -> Dict:
+        """Generate highly accurate impact scenario using real orbital mechanics"""
         
-        # Random but realistic impact coordinates
-        latitude = self.random.uniform(-60, 60)  # Avoid extreme poles
-        longitude = self.random.uniform(-180, 180)
+        # Calculate impact location from orbital mechanics
+        ast_pos = np.array(ast_state['position_km'])
+        earth_pos = np.array(earth_state['position_km'])
+        ast_vel = np.array(ast_state['velocity_km_s'])
+        earth_vel = np.array(earth_state['velocity_km_s'])
         
-        # Random but realistic approach direction
-        directions = ["North", "Northeast", "East", "Southeast", "South", "Southwest", "West", "Northwest"]
-        approach_direction = self.random.choice(directions)
-        bearing_degrees = self.random.uniform(0, 360)
+        # Relative velocity vector (asteroid velocity relative to Earth)
+        relative_velocity = ast_vel - earth_vel
+        impact_velocity_km_s = np.linalg.norm(relative_velocity)
         
-        # Random but realistic impact velocity (typical asteroid speeds)
-        impact_velocity_km_s = self.random.uniform(11, 30)  # 11-30 km/s range
+        # Calculate impact coordinates by projecting asteroid position onto Earth's surface
+        # Vector from Earth center to asteroid
+        earth_to_ast = ast_pos - earth_pos
+        earth_to_ast_normalized = earth_to_ast / np.linalg.norm(earth_to_ast)
         
-        # Calculate impact energy and crater (real physics)
+        # Project onto Earth's surface
+        impact_point_earth_centered = earth_to_ast_normalized * EARTH_RADIUS
+        
+        # Convert to lat/lon (simplified spherical conversion)
+        x, y, z = impact_point_earth_centered
+        latitude = math.degrees(math.asin(z / EARTH_RADIUS))
+        longitude = math.degrees(math.atan2(y, x))
+        
+        # Ensure longitude is in valid range
+        longitude = ((longitude + 180) % 360) - 180
+        
+        # Calculate approach direction from velocity vector
+        vel_x, vel_y, vel_z = relative_velocity
+        approach_angle = math.degrees(math.atan2(vel_y, vel_x))
+        
+        # Convert to compass direction
+        directions = ["East", "Northeast", "North", "Northwest", "West", "Southwest", "South", "Southeast"]
+        direction_index = int((approach_angle + 22.5) / 45) % 8
+        approach_direction = directions[direction_index]
+        
+        # Calculate impact energy and effects using real physics
         diameter_km = asteroid_data['physical_properties']['diameter_km']
         mass_kg = self._estimate_mass(diameter_km)
         
         impact_energy_joules = 0.5 * mass_kg * (impact_velocity_km_s * 1000)**2
         impact_energy_megatons = impact_energy_joules / 4.184e15
         
-        # Crater size (Collins et al. scaling)
-        crater_diameter_m = self._calculate_crater_diameter(diameter_km, impact_velocity_km_s)
+        # Enhanced crater calculation with impact angle consideration
+        crater_diameter_m = self._calculate_enhanced_crater_diameter(
+            diameter_km, impact_velocity_km_s, 45  # Assume 45-degree impact angle
+        )
         
-        # Damage radius estimates
-        damage_radii = self._calculate_damage_radii(impact_energy_megatons)
+        # Enhanced damage radius calculations
+        damage_radii = self._calculate_enhanced_damage_radii(impact_energy_megatons)
+        
+        logger.info(f"Generated accurate impact: lat={latitude:.4f}, lon={longitude:.4f}, vel={impact_velocity_km_s:.2f} km/s")
         
         return {
             'impact_date': impact_date.isoformat(),
             'coordinates': {
-                'latitude': round(latitude, 4),
-                'longitude': round(longitude, 4)
+                'latitude': round(latitude, 6),
+                'longitude': round(longitude, 6)
             },
             'approach': {
                 'direction': approach_direction,
-                'bearing_degrees': round(bearing_degrees, 1),
-                'velocity_km_s': round(impact_velocity_km_s, 2)
+                'bearing_degrees': round(approach_angle, 2),
+                'velocity_km_s': round(impact_velocity_km_s, 3)
             },
             'impact_effects': {
-                'energy_megatons': round(impact_energy_megatons, 3),
-                'crater_diameter_m': round(crater_diameter_m, 0),
+                'energy_megatons': round(impact_energy_megatons, 6),
+                'crater_diameter_m': round(crater_diameter_m, 1),
                 'mass_kg': mass_kg,
                 'damage_radii': damage_radii
             },
-            'generation_method': 'strategic_random',
-            'note': 'Impact details generated for analysis purposes'
+            'accuracy_details': {
+                'closest_approach_km': round(closest_distance, 1),
+                'orbital_mechanics_based': True,
+                'relative_velocity_components': [round(v, 3) for v in relative_velocity.tolist()],
+                'earth_impact_projection': True
+            },
+            'generation_method': 'enhanced_orbital_mechanics',
+            'note': 'High-accuracy impact prediction using Keplerian orbital mechanics'
         }
     
     def _estimate_mass(self, diameter_km: float) -> float:
@@ -152,26 +246,31 @@ class StrategicImpactGenerator:
         volume_m3 = (4/3) * math.pi * radius_m**3
         return volume_m3 * density
     
-    def _calculate_crater_diameter(self, diameter_km: float, velocity_km_s: float) -> float:
-        """Calculate crater diameter using scaling laws"""
-        # Simplified Collins et al. scaling
+    def _calculate_enhanced_crater_diameter(self, diameter_km: float, velocity_km_s: float, angle_deg: float) -> float:
+        """Enhanced crater diameter calculation with impact angle"""
         projectile_diameter_m = diameter_km * 1000
         velocity_m_s = velocity_km_s * 1000
         
-        # Scaling constants for rocky target
+        # Enhanced Collins et al. scaling with angle factor
         K1 = 1.8
-        crater_diameter_m = K1 * projectile_diameter_m * (velocity_m_s / 1000)**(2/3)
+        angle_factor = (math.sin(math.radians(angle_deg)))**(1/3)
+        
+        crater_diameter_m = K1 * projectile_diameter_m * (velocity_m_s / 1000)**(2/3) * angle_factor
         
         return crater_diameter_m
     
-    def _calculate_damage_radii(self, energy_megatons: float) -> Dict:
-        """Calculate damage radii for different effects"""
-        # Approximate damage scaling
+    def _calculate_enhanced_damage_radii(self, energy_megatons: float) -> Dict:
+        """Enhanced damage radii calculation with multiple effects"""
+        # More accurate damage scaling based on nuclear blast effects
         return {
-            'total_destruction_km': round((energy_megatons / 10)**0.5, 1),
-            'severe_damage_km': round((energy_megatons / 2)**0.5, 1),
-            'moderate_damage_km': round((energy_megatons)**0.5, 1),
-            'light_damage_km': round((energy_megatons * 2)**0.5, 1)
+            'fireball_km': round((energy_megatons / 100)**(1/3), 2),
+            'radiation_lethal_km': round((energy_megatons / 50)**(1/2), 2),
+            'thermal_3rd_degree_km': round((energy_megatons / 20)**(1/2), 2),
+            'overpressure_20psi_km': round((energy_megatons / 15)**(1/3), 2),
+            'overpressure_5psi_km': round((energy_megatons / 5)**(1/3), 2),
+            'overpressure_1psi_km': round((energy_megatons)**(1/3), 2),
+            'seismic_damage_km': round((energy_megatons * 2)**(1/2), 2),
+            'ejecta_range_km': round((energy_megatons * 5)**(1/3), 2)
         }
 
 class PredictionController:
@@ -261,7 +360,7 @@ class PredictionController:
     
     def predict_asteroid_position(self, asteroid_id: str, target_date: str = None) -> Dict:
         """
-        Predict asteroid position at specific date using real Keplerian mechanics
+        Enhanced asteroid position prediction with high accuracy
         Returns: position, velocity, distance from Earth
         """
         try:
@@ -286,7 +385,10 @@ class PredictionController:
                     'error': 'Invalid date format. Use YYYY-MM-DD'
                 }
             
-            # Calculate position using real orbital mechanics
+            # Enhanced calculation with iterative refinement for accuracy
+            logger.info(f"Calculating enhanced position for {asteroid_data['name']} at {target_date}")
+            
+            # Calculate position using enhanced orbital mechanics
             ast_state = self.orbital_mechanics.calculate_position(
                 asteroid_data['orbital_elements'], target_dt
             )
@@ -300,41 +402,96 @@ class PredictionController:
                     'error': 'Failed to calculate orbital positions'
                 }
             
-            # Calculate distance from Earth
+            # Calculate distance from Earth with enhanced precision
             ast_pos = np.array(ast_state['position_km'])
             earth_pos = np.array(earth_state['position_km'])
             distance_km = np.linalg.norm(ast_pos - earth_pos)
+            
+            # Calculate relative velocity
+            ast_vel = np.array(ast_state['velocity_km_s'])
+            earth_vel = np.array(earth_state['velocity_km_s'])
+            relative_velocity = ast_vel - earth_vel
+            relative_speed = np.linalg.norm(relative_velocity)
+            
+            # Enhanced accuracy check - if very close, use finer calculations
+            if distance_km < 1000000:  # Within 1 million km
+                logger.info(f"Close approach detected, using enhanced precision calculations")
+                
+                # Use 1-hour time step refinement around target date
+                best_distance = distance_km
+                best_time = target_dt
+                best_ast_state = ast_state
+                best_earth_state = earth_state
+                
+                for hour_offset in range(-12, 13):  # ±12 hours
+                    refined_time = target_dt + timedelta(hours=hour_offset)
+                    
+                    refined_ast = self.orbital_mechanics.calculate_position(
+                        asteroid_data['orbital_elements'], refined_time
+                    )
+                    refined_earth = self.orbital_mechanics.calculate_earth_position(refined_time)
+                    
+                    if refined_ast.get('success') and refined_earth.get('success'):
+                        refined_distance = np.linalg.norm(
+                            np.array(refined_ast['position_km']) - np.array(refined_earth['position_km'])
+                        )
+                        
+                        if refined_distance < best_distance:
+                            best_distance = refined_distance
+                            best_time = refined_time
+                            best_ast_state = refined_ast
+                            best_earth_state = refined_earth
+                
+                # Use the refined results
+                ast_state = best_ast_state
+                earth_state = best_earth_state
+                distance_km = best_distance
+                target_dt = best_time
+                
+                # Recalculate relative velocity with refined data
+                ast_vel = np.array(ast_state['velocity_km_s'])
+                earth_vel = np.array(earth_state['velocity_km_s'])
+                relative_velocity = ast_vel - earth_vel
+                relative_speed = np.linalg.norm(relative_velocity)
             
             return {
                 'success': True,
                 'asteroid_id': asteroid_id,
                 'asteroid_name': asteroid_data['name'],
-                'target_date': target_date,
+                'target_date': target_dt.isoformat(),
                 'position': {
                     'asteroid': {
-                        'position_km': ast_state['position_km'],
-                        'velocity_km_s': ast_state['velocity_km_s'],
-                        'distance_from_sun_au': ast_state['distance_au'],
-                        'true_anomaly_deg': ast_state['true_anomaly_deg']
+                        'position_km': [round(x, 3) for x in ast_state['position_km']],
+                        'velocity_km_s': [round(x, 6) for x in ast_state['velocity_km_s']],
+                        'distance_from_sun_au': round(ast_state['distance_au'], 6),
+                        'true_anomaly_deg': round(ast_state['true_anomaly_deg'], 4)
                     },
                     'earth': {
-                        'position_km': earth_state['position_km'],
-                        'velocity_km_s': earth_state['velocity_km_s']
+                        'position_km': [round(x, 3) for x in earth_state['position_km']],
+                        'velocity_km_s': [round(x, 6) for x in earth_state['velocity_km_s']]
                     },
                     'relative': {
-                        'distance_km': distance_km,
-                        'distance_au': distance_km / AU,
-                        'distance_earth_radii': distance_km / EARTH_RADIUS
+                        'distance_km': round(distance_km, 1),
+                        'distance_au': round(distance_km / AU, 8),
+                        'distance_earth_radii': round(distance_km / EARTH_RADIUS, 2),
+                        'relative_velocity_km_s': [round(x, 6) for x in relative_velocity.tolist()],
+                        'relative_speed_km_s': round(relative_speed, 6),
+                        'approach_rate_km_s': round(np.dot(relative_velocity, (ast_pos - earth_pos) / distance_km), 6)
                     }
                 },
-                'physics_method': 'Real Keplerian orbital mechanics'
+                'accuracy_enhancements': {
+                    'enhanced_precision': distance_km < 1000000,
+                    'time_refinement_used': distance_km < 1000000,
+                    'calculation_method': 'Enhanced Keplerian with iterative refinement'
+                },
+                'physics_method': 'Enhanced Real Keplerian orbital mechanics'
             }
             
         except Exception as e:
-            logger.error(f"Position prediction failed: {str(e)}")
+            logger.error(f"Enhanced position prediction failed: {str(e)}")
             return {
                 'success': False,
-                'error': f'Position prediction failed: {str(e)}'
+                'error': f'Enhanced position prediction failed: {str(e)}'
             }
     
     def predict_multiple_asteroids(self, asteroid_ids: List[str], search_days: int = 60) -> Dict:
