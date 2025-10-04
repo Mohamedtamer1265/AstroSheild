@@ -26,6 +26,17 @@ export const API_CONFIG = {
     VIZ_SHAKE_MAP: '/api/visualization/shake-map',
     VIZ_IMPACT_CHART: '/api/visualization/impact-chart',
     
+    // Advanced Prediction (New)
+    PREDICT_IMPACT: '/api/predict/impact',
+    PREDICT_POSITION: '/api/predict/position',
+    PREDICT_TRAJECTORY: '/api/predict/trajectory',
+    PREDICT_MULTI: '/api/predict/multi-asteroid',
+    PREDICT_RISK: '/api/predict/risk',
+    
+    // Asteroid Data (New)
+    ASTEROIDS_SEARCH: '/api/asteroids/search',
+    ASTEROIDS_GET: '/api/asteroids',
+    
     // Health & Info
     HEALTH: '/api/health',
     INFO: '/api/info'
