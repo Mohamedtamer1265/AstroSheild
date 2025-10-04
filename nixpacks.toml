@@ -1,0 +1,14 @@
+[phases.setup]
+nixPkgs = ['python310', 'nodejs-18_x', 'npm-9_x']
+
+[phases.install]
+cmds = [
+    'pip install -r server/requirements.txt',
+    'cd client && npm ci'
+]
+
+[phases.build]
+cmds = ['cd client && npm run build']
+
+[start]
+cmd = 'python server/run.py'

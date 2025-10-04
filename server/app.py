@@ -6,7 +6,7 @@ Main Flask application providing REST API endpoints for asteroid impact modeling
 Integrates with React frontend for comprehensive impact analysis and visualization.
 """
 
-from flask import Flask, request, jsonify, send_file
+from flask import Flask, request, jsonify, send_file, send_from_directory
 from flask_cors import CORS
 import logging
 import traceback
@@ -30,14 +30,28 @@ logger = logging.getLogger(__name__)
 
 def create_app():
     """Create and configure the Flask application."""
-    app = Flask(__name__)
+    # Set up paths for serving React build
+    server_dir = os.path.dirname(os.path.abspath(__file__))
+    project_root = os.path.dirname(server_dir)
+    static_folder = os.path.join(project_root, 'client', 'dist')
     
-    # Enable CORS for React frontend
-    CORS(app, origins=["http://localhost:3000", "http://localhost:5173"])
+    app = Flask(__name__, static_folder=static_folder, static_url_path='')
+    
+    # Determine if we're in production
+    is_production = os.environ.get('RAILWAY_ENVIRONMENT') is not None
+    
+    # Configure CORS based on environment
+    if is_production:
+        # In production, allow same origin (since we'll serve frontend from same domain)
+        CORS(app, origins=["*"])  # Allow all origins for Railway deployment
+    else:
+        # Development CORS settings
+        CORS(app, origins=["http://localhost:3000", "http://localhost:5173", "http://localhost:3001"])
     
     # Configuration
     app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'nasa-space-apps-2024')
     app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
+    app.config['ENV'] = 'production' if is_production else 'development'
     
     # Initialize managers
     nasa_api_manager = NASAAPIManager()
@@ -131,9 +145,7 @@ def create_app():
                     'predict_multi_asteroid': '/api/predict/multi-asteroid',
                     'assess_impact_risk': '/api/predict/risk/<asteroid_id>',
                     'search_asteroids': '/api/asteroids/search',
-                    'get_asteroid_data': '/api/asteroids/<asteroid_id>',
-                    'notable_asteroids': '/api/asteroids/list/notable',
-                    'search_all_asteroids': '/api/asteroids/list/search-all'
+                    'get_asteroid_data': '/api/asteroids/<asteroid_id>'
                 },
                 'capabilities': [
                     'Asteroid impact physics modeling',
@@ -428,133 +440,29 @@ def create_app():
                 'error': f'Asteroid data fetch failed: {str(e)}'
             }), 500
     
-    @app.route('/api/asteroids/list/notable', methods=['GET'])
-    def get_notable_asteroids():
-        """
-        Get a list of notable asteroids including NEOs and PHAs
-        Returns: List of well-known asteroids with basic info
-        """
+    # Production: Serve React app
+    @app.route('/')
+    def serve_react_app():
+        """Serve the React application."""
         try:
-            # List of notable asteroids with their common names/IDs
-            notable_asteroids = [
-                {'id': '433', 'name': 'Eros', 'type': 'Near-Earth Object'},
-                {'id': '1036', 'name': 'Ganymed', 'type': 'Near-Earth Object'},
-                {'id': '1566', 'name': 'Icarus', 'type': 'Potentially Hazardous'},
-                {'id': '1620', 'name': 'Geographos', 'type': 'Near-Earth Object'},
-                {'id': '1862', 'name': 'Apollo', 'type': 'Near-Earth Object'},
-                {'id': '1863', 'name': 'Antinous', 'type': 'Apollo Group'},
-                {'id': '1864', 'name': 'Daedalus', 'type': 'Apollo Group'},
-                {'id': '1865', 'name': 'Cerberus', 'type': 'Apollo Group'},
-                {'id': '1866', 'name': 'Sisyphus', 'type': 'Apollo Group'},
-                {'id': '1980', 'name': 'Tezcatlipoca', 'type': 'Apollo Group'},
-                {'id': '2060', 'name': 'Chiron', 'type': 'Centaur'},
-                {'id': '2062', 'name': 'Aten', 'type': 'Aten Group'},
-                {'id': '2100', 'name': 'Ra-Shalom', 'type': 'Aten Group'},
-                {'id': '2101', 'name': 'Adonis', 'type': 'Apollo Group'},
-                {'id': '2102', 'name': 'Tantalus', 'type': 'Apollo Group'},
-                {'id': '2135', 'name': 'Aristaeus', 'type': 'Apollo Group'},
-                {'id': '2201', 'name': 'Oljato', 'type': 'Apollo Group'},
-                {'id': '2212', 'name': 'Hephaistos', 'type': 'Apollo Group'},
-                {'id': '3122', 'name': 'Florence', 'type': 'Potentially Hazardous'},
-                {'id': '3200', 'name': 'Phaethon', 'type': 'Apollo Group'},
-                {'id': '3554', 'name': 'Amun', 'type': 'Aten Group'},
-                {'id': '4015', 'name': 'Wilson-Harrington', 'type': 'Apollo Group'},
-                {'id': '4179', 'name': 'Toutatis', 'type': 'Apollo Group'},
-                {'id': '4183', 'name': 'Cuno', 'type': 'Apollo Group'},
-                {'id': '4450', 'name': 'Pan', 'type': 'Apollo Group'},
-                {'id': '4660', 'name': 'Nereus', 'type': 'Apollo Group'},
-                {'id': '4769', 'name': 'Castalia', 'type': 'Apollo Group'},
-                {'id': '5143', 'name': 'Itokawa', 'type': 'Apollo Group'},
-                {'id': '6489', 'name': 'Golevka', 'type': 'Apollo Group'},
-                {'id': '25143', 'name': 'Itokawa', 'type': 'Apollo Group'},
-                {'id': '99942', 'name': 'Apophis', 'type': 'Potentially Hazardous'},
-                {'id': '101955', 'name': 'Bennu', 'type': 'Apollo Group'},
-                {'id': '162173', 'name': 'Ryugu', 'type': 'Apollo Group'}
-            ]
-            
+            return send_from_directory(app.static_folder, 'index.html')
+        except FileNotFoundError:
+            # If build doesn't exist, return API info instead
             return jsonify({
-                'success': True,
-                'count': len(notable_asteroids),
-                'asteroids': notable_asteroids,
-                'note': 'This list includes notable Near-Earth Objects, Potentially Hazardous Asteroids, and mission targets'
+                'message': 'AstroShield API Server',
+                'status': 'Running',
+                'api_docs': '/api/info',
+                'health_check': '/api/health'
             })
-            
-        except Exception as e:
-            logger.error(f"Notable asteroids list failed: {str(e)}")
-            return jsonify({
-                'success': False,
-                'error': f'Notable asteroids list failed: {str(e)}'
-            }), 500
     
-    @app.route('/api/asteroids/list/search-all', methods=['GET'])
-    def search_all_asteroids():
-        """
-        Search for asteroids without specific query (gets recent discoveries/notable ones)
-        Query parameters: ?limit=50&neo_only=true&pha_only=false
-        Returns: List of asteroids based on filters
-        """
+    @app.route('/<path:path>')
+    def serve_react_assets(path):
+        """Serve React static assets."""
         try:
-            limit = int(request.args.get('limit', 50))
-            neo_only = request.args.get('neo_only', 'false').lower() == 'true'
-            pha_only = request.args.get('pha_only', 'false').lower() == 'true'
-            
-            # Use JPL's query API to get a broader list
-            search_url = "https://ssd-api.jpl.nasa.gov/sbdb_query.api"
-            params = {
-                'fields': 'spkid,full_name,neo,pha,H,diameter,class',
-                'sb-kind': 'a',  # asteroids only
-                'limit': limit
-            }
-            
-            # Add filters based on parameters
-            if neo_only:
-                params['neo'] = '1'
-            if pha_only:
-                params['pha'] = '1'
-            
-            logger.info(f"Fetching asteroid list with limit: {limit}, NEO only: {neo_only}, PHA only: {pha_only}")
-            
-            import requests
-            response = requests.get(search_url, params=params, timeout=30)
-            response.raise_for_status()
-            data = response.json()
-            
-            if 'data' not in data:
-                return jsonify({
-                    'success': False,
-                    'error': 'No asteroid data available'
-                }), 404
-            
-            results = []
-            for row in data['data']:
-                if len(row) >= 7:  # Ensure we have all expected fields
-                    results.append({
-                        'id': str(row[0]),
-                        'name': row[1],
-                        'neo': row[2] == '1' if row[2] else False,
-                        'pha': row[3] == '1' if row[3] else False,
-                        'absolute_magnitude': float(row[4]) if row[4] else None,
-                        'diameter_km': float(row[5]) if row[5] else None,
-                        'class': row[6] if len(row) > 6 else None
-                    })
-            
-            return jsonify({
-                'success': True,
-                'count': len(results),
-                'filters': {
-                    'limit': limit,
-                    'neo_only': neo_only,
-                    'pha_only': pha_only
-                },
-                'asteroids': results
-            })
-            
-        except Exception as e:
-            logger.error(f"Asteroid list search failed: {str(e)}")
-            return jsonify({
-                'success': False,
-                'error': f'Asteroid list search failed: {str(e)}'
-            }), 500
+            return send_from_directory(app.static_folder, path)
+        except FileNotFoundError:
+            # If asset not found, serve the React app (for client-side routing)
+            return send_from_directory(app.static_folder, 'index.html')
     
     return app
 

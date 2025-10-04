@@ -4,9 +4,11 @@ import bgImg from "../assets/img/intro.jpg";
 import gameBgImg from "../assets/img/gameintro.jpg";
 import wiiryvid from "../assets/vid/wiry.mp4";
 import { useNavigate } from "react-router-dom";
+
 const Home = () => {
   const ASTRO_PINK = "#d84594";
   const navigate = useNavigate();
+  
   return (
     <div>
       {/* ================= Home Section ================= */}
@@ -50,10 +52,11 @@ const Home = () => {
           </button>
         </div>
       </section>
+
       {/* -------------------- EXPLANATION SECTION -------------------- */}
       <section
         id="explanation-section"
-        className="min-h-screen w-full bg-cover bg-center flex flex-col items-center justify-center text-white relative py-16 pt-25"
+        className="min-h-screen w-full bg-cover bg-center flex flex-col items-center justify-center text-white relative py-16"
         style={{ backgroundImage: `url(${gameBgImg})` }}
       >
         {/* Section Title */}
@@ -189,40 +192,77 @@ const Home = () => {
           </button>
         </div>
 
-        {/* Description Box */}
-        <div
-          className="p-8 w-full max-w-6xl text-justify"
-          style={{
-            color: "#F7F7F7",
-            fontFamily: '"Open Sans", sans-serif',
-            fontSize: "18px",
-            fontStyle: "normal",
-            fontWeight: 400,
-            lineHeight: "normal",
-            borderRadius: "10px",
-            border: "0.5px solid #15EEFF",
-            background: "rgba(40, 77, 128, 0.30)",
-            boxShadow: "0 4px 15px rgba(0, 0, 0, 0.2)",
-          }}
-        >
-          <p className="mb-4">
-            In a world constantly changing and threatened by falling asteroids,
-            Wiiry rises as the hero who has dedicated his life to protecting
-            Earth and its people. He walks through different places — sometimes
-            by the shore, other times across the desert — while above him,
-            danger draws closer with every moment.
-          </p>
-          <p className="mb-4">
-            But Wiiry never gives up. Each time an asteroid approaches, he faces
-            critical decisions. The game offers him multiple options — if he
-            chooses the right one, he saves lives and prevents disaster. If he
-            chooses wrong, people will be harmed, and he will lose one of his
-            three chances.
-          </p>
-          <p>
-            He has only three attempts. Every choice shapes the planet’s fate.
-            Can you guide Wiiry to make the right decisions and save Earth?
-          </p>
+        {/* Story Sections Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto px-6">
+          
+          {/* The Hero's Mission */}
+          <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20 hover:bg-white/15 transition-all duration-300 shadow-2xl">
+            <div className="text-center mb-4">
+              <div className="text-4xl mb-3">🦸</div>
+              <h3 className="text-xl font-bold text-white mb-3">The Hero's Mission</h3>
+            </div>
+            <p className="text-gray-200 leading-relaxed text-sm">
+              In a world constantly threatened by falling asteroids, Wiiry rises as the dedicated hero 
+              protecting Earth and its people. He travels across diverse landscapes while danger 
+              approaches from above.
+            </p>
+          </div>
+
+          {/* Critical Decisions */}
+          <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20 hover:bg-white/15 transition-all duration-300 shadow-2xl">
+            <div className="text-center mb-4">
+              <div className="text-4xl mb-3">⚡</div>
+              <h3 className="text-xl font-bold text-white mb-3">Critical Decisions</h3>
+            </div>
+            <p className="text-gray-200 leading-relaxed text-sm">
+              Each asteroid approach presents Wiiry with crucial choices. Make the right decision 
+              to save lives and prevent disaster. Choose wrong, and consequences follow with 
+              lives at stake.
+            </p>
+          </div>
+
+          {/* The Challenge */}
+          <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20 hover:bg-white/15 transition-all duration-300 shadow-2xl">
+            <div className="text-center mb-4">
+              <div className="text-4xl mb-3">🎯</div>
+              <h3 className="text-xl font-bold text-white mb-3">The Challenge</h3>
+            </div>
+            <p className="text-gray-200 leading-relaxed text-sm">
+              Wiiry has only three attempts. Every choice shapes our planet's fate. 
+              Can you guide him through the critical moments and help save Earth from 
+              asteroid devastation?
+            </p>
+          </div>
+
+        </div>
+
+        {/* Game Features */}
+        <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto px-6">
+          
+          {/* Gameplay Mechanics */}
+          <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20 hover:bg-white/15 transition-all duration-300 shadow-2xl">
+            <div className="text-center mb-4">
+              <div className="text-4xl mb-3">🎮</div>
+              <h3 className="text-xl font-bold text-white mb-3">Interactive Gameplay</h3>
+            </div>
+            <p className="text-gray-200 leading-relaxed text-sm">
+              Experience multiple-choice scenarios where your decisions determine the outcome. 
+              Navigate through different environments and face unique challenges in each situation.
+            </p>
+          </div>
+
+          {/* Educational Value */}
+          <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20 hover:bg-white/15 transition-all duration-300 shadow-2xl">
+            <div className="text-center mb-4">
+              <div className="text-4xl mb-3">🧠</div>
+              <h3 className="text-xl font-bold text-white mb-3">Learn & Explore</h3>
+            </div>
+            <p className="text-gray-200 leading-relaxed text-sm">
+              Learn about asteroid impacts, disaster response, and planetary defense while 
+              having fun. Each scenario teaches real-world concepts about space threats.
+            </p>
+          </div>
+
         </div>
       </section>
     </div>

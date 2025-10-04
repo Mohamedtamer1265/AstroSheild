@@ -12,7 +12,7 @@ export default {
       // This is where you add new utility classes
       fontFamily: {
         // Now you can use the Tailwind class 'font-pixel'
-        'pixel': ['"Pixelify Sans"', 'sans-serif'], 
+        'pixel': ['"Pixelify Sans"', 'sans-serif', 'Space Mono'], 
       },
     },
   },
