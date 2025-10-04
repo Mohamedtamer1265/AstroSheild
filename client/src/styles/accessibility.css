@@ -1,0 +1,114 @@
+/* Color Blind Accessibility Features */
+
+/* Color blind simulation filters */
+.protanopia-filter {
+  filter: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg"><defs><filter id="protanopia"><feColorMatrix values="0.567,0.433,0,0,0 0.558,0.442,0,0,0 0,0.242,0.758,0,0 0,0,0,1,0"/></filter></defs></svg>#protanopia');
+}
+
+.deuteranopia-filter {
+  filter: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg"><defs><filter id="deuteranopia"><feColorMatrix values="0.625,0.375,0,0,0 0.7,0.3,0,0,0 0,0.3,0.7,0,0 0,0,0,1,0"/></filter></defs></svg>#deuteranopia');
+}
+
+.tritanopia-filter {
+  filter: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg"><defs><filter id="tritanopia"><feColorMatrix values="0.95,0.05,0,0,0 0,0.433,0.567,0,0 0,0.475,0.525,0,0 0,0,0,1,0"/></filter></defs></svg>#tritanopia');
+}
+
+/* High contrast patterns for additional distinction */
+.pattern-success {
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(59, 130, 246, 0.1),
+    rgba(59, 130, 246, 0.1) 2px,
+    transparent 2px,
+    transparent 4px
+  );
+}
+
+.pattern-warning {
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(251, 146, 60, 0.1),
+    rgba(251, 146, 60, 0.1) 2px,
+    transparent 2px,
+    transparent 4px
+  );
+}
+
+.pattern-danger {
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(147, 51, 234, 0.1),
+    rgba(147, 51, 234, 0.1) 2px,
+    transparent 2px,
+    transparent 4px
+  );
+}
+
+/* Color blind friendly button styles */
+.cb-success {
+  background-color: #2563eb;
+  color: white;
+  border: 2px solid #1e40af;
+}
+
+.cb-warning {
+  background-color: #ea580c;
+  color: white;
+  border: 2px solid #c2410c;
+}
+
+.cb-danger {
+  background-color: #9333ea;
+  color: white;
+  border: 2px solid #7c3aed;
+}
+
+.cb-info {
+  background-color: #0891b2;
+  color: white;
+  border: 2px solid #0e7490;
+}
+
+/* Accessible text colors */
+.cb-success-text {
+  color: #60a5fa;
+}
+
+.cb-warning-text {
+  color: #fb923c;
+}
+
+.cb-danger-text {
+  color: #c084fc;
+}
+
+.cb-info-text {
+  color: #22d3ee;
+}
+
+/* Focus styles for better keyboard navigation */
+.accessibility-focus:focus {
+  outline: 2px solid #60a5fa;
+  outline-offset: 2px;
+}
+
+/* Enhanced contrast for text */
+.high-contrast-text {
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+/* Icon alternatives for color-only information */
+.status-icon-safe::before {
+  content: "✓ ";
+  color: #60a5fa;
+}
+
+.status-icon-warning::before {
+  content: "⚠ ";
+  color: #fb923c;
+}
+
+.status-icon-danger::before {
+  content: "⚠ ";
+  color: #c084fc;
+}
