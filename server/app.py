@@ -6,7 +6,7 @@ Main Flask application providing REST API endpoints for asteroid impact modeling
 Integrates with React frontend for comprehensive impact analysis and visualization.
 """
 
-from flask import Flask, request, jsonify, send_file, send_from_directory
+from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS
 import logging
 import traceback
@@ -30,28 +30,28 @@ logger = logging.getLogger(__name__)
 
 def create_app():
     """Create and configure the Flask application."""
-    # Set up paths for serving React build
-    server_dir = os.path.dirname(os.path.abspath(__file__))
-    project_root = os.path.dirname(server_dir)
-    static_folder = os.path.join(project_root, 'client', 'dist')
+    app = Flask(__name__)
     
-    app = Flask(__name__, static_folder=static_folder, static_url_path='')
+    # Enable CORS for React frontend (development and production)
+    allowed_origins = [
+        "http://localhost:3000", 
+        "http://localhost:5173",
+        "http://localhost:3001"  # Your current Vite dev server
+    ]
     
-    # Determine if we're in production
-    is_production = os.environ.get('RAILWAY_ENVIRONMENT') is not None
+    # Add production origins if deployed
+    if os.environ.get('RAILWAY_ENVIRONMENT'):
+        # Add your deployed frontend URL here when you deploy the frontend
+        allowed_origins.extend([
+            "https://your-frontend-domain.vercel.app",  # Replace with actual domain
+            "https://your-frontend-domain.railway.app"   # Replace with actual domain
+        ])
     
-    # Configure CORS based on environment
-    if is_production:
-        # In production, allow same origin (since we'll serve frontend from same domain)
-        CORS(app, origins=["*"])  # Allow all origins for Railway deployment
-    else:
-        # Development CORS settings
-        CORS(app, origins=["http://localhost:3000", "http://localhost:5173", "http://localhost:3001"])
+    CORS(app, origins=allowed_origins)
     
     # Configuration
     app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'nasa-space-apps-2024')
     app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
-    app.config['ENV'] = 'production' if is_production else 'development'
     
     # Initialize managers
     nasa_api_manager = NASAAPIManager()
@@ -440,45 +440,24 @@ def create_app():
                 'error': f'Asteroid data fetch failed: {str(e)}'
             }), 500
     
-    # Production: Serve React app
-    @app.route('/')
-    def serve_react_app():
-        """Serve the React application."""
-        try:
-            return send_from_directory(app.static_folder, 'index.html')
-        except FileNotFoundError:
-            # If build doesn't exist, return API info instead
-            return jsonify({
-                'message': 'AstroShield API Server',
-                'status': 'Running',
-                'api_docs': '/api/info',
-                'health_check': '/api/health'
-            })
-    
-    @app.route('/<path:path>')
-    def serve_react_assets(path):
-        """Serve React static assets."""
-        try:
-            return send_from_directory(app.static_folder, path)
-        except FileNotFoundError:
-            # If asset not found, serve the React app (for client-side routing)
-            return send_from_directory(app.static_folder, 'index.html')
-    
     return app
 
 # Create the application instance
 app = create_app()
 
 if __name__ == '__main__':
-    # Development server
+    # Get port from environment variable (Railway sets this) or default to 5000
+    port = int(os.environ.get('PORT', 5000))
+    debug_mode = os.environ.get('FLASK_ENV') != 'production'
+    
     print("🚀 Starting Asteroid Impact Modeling API...")
-    print("🌍 Serving on http://localhost:5000")
+    print(f"🌍 Serving on port {port}")
     print("📡 API endpoints available at /api/")
     print("💡 Visit /api/info for full API documentation")
     
     app.run(
         host='0.0.0.0',
-        port=5000,
-        debug=True,
+        port=port,
+        debug=debug_mode,
         threaded=True
     )
